@@ -5,32 +5,9 @@ margin_ends = 0
 background_opacity = 0.93
 thickness = 35
 widget_spacing = 6
-start = []
-center = ["launcher", "menu_gap", "workspaces", "window_gap", "active_window"]
-end = ["media", "tray", "notifications", "battery", "volume", "brightness", "clock_left_gap", "clock", "clock_right_gap", "control-center"]
-
-[bar.window_dock]
-position = "bottom"
-thickness = 64
-scale = 1.2
-margin_edge = 8
-margin_ends = 0
-background_opacity = 0
-compositor_blur = false
-auto_hide = true
-reserve_space = false
-start = []
-center = ["group:windows"]
-end = []
-
-[[bar.window_dock.capsule_group]]
-id = "windows"
-members = ["dock_launcher", "window_tasks"]
-fill = "surface_container"
-opacity = 0.88
-padding = 8
-radius = 16
-widget_spacing = 8
+start = ["launcher", "menu_gap", "active_window"]
+center = ["workspaces"]
+end = ["media", "tray", "network", "privacy", "battery", "volume", "brightness", "notifications", "control-center", "clock_left_gap", "clock"]
 
 [widget.launcher]
 glyph = "brand-finder"
@@ -38,11 +15,11 @@ custom_image = "/usr/share/icons/cachyos.svg"
 scale = 1.6
 capsule_padding = 0
 
-[widget.menu_gap]
-type = "spacer"
-length = 8
+[widget.launcher.actions]
+left = "panel-toggle session"
+right = "panel-toggle launcher"
 
-[widget.window_gap]
+[widget.menu_gap]
 type = "spacer"
 length = 8
 
@@ -50,28 +27,8 @@ length = 8
 type = "spacer"
 length = 8
 
-[widget.clock_right_gap]
-type = "spacer"
-length = 8
-
-[widget.dock_launcher]
-type = "launcher"
-glyph = "grid-dots"
-scale = 1.8
-capsule_padding = 0
-
-[widget.window_tasks]
-type = "taskbar"
-pinned = []
-show_running = true
-show_all_outputs = true
-only_active_workspace = false
-group_by_workspace = false
-icon_scale = 2
-item_spacing = 8
-active_opacity = 1
-inactive_opacity = 1
-capsule_padding = 0
+[widget.clock.actions]
+left = "panel-toggle control-center notifications"
 
 [shell]
 font_family = "Adwaita Sans"
@@ -93,15 +50,19 @@ session_placement = "floating"
 session_position = "center"
 
 [dock]
-enabled = false
+enabled = true
 position = "bottom"
-auto_hide = true
-reserve_space = false
-margin_edge = 8
+auto_hide = false
+reserve_space = true
+margin_edge = 0
 margin_ends = 0
-icon_size = 40
+icon_size = 32
+main_axis_padding = 0
+cross_axis_padding = 0
+item_spacing = 0
 show_running = true
 show_dots = true
+magnification = true
 launcher_position = "start"
 
 [theme]

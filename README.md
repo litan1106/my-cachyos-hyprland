@@ -8,8 +8,8 @@ Select Hyprland during CachyOS installation, or install the profile first. Clone
 
 ```bash
 sudo pacman -Syu --needed cachyos-hypr-noctalia
-git clone https://github.com/litan1106/my-cachyos-niri.git
-cd my-cachyos-niri
+git clone https://github.com/litan1106/my-cachyos-hyprland.git
+cd my-cachyos-hyprland
 ./install.sh --dry-run
 ./install.sh
 ```
@@ -25,42 +25,6 @@ noctalia msg status
 ```
 
 Test the launcher, dock, session menu, lock screen, hardware keys, notifications, and your usual applications.
-
-## Migrate from this repository's Niri setup
-
-Follow the [step-by-step migration guide](docs/migrate-niri-to-hyprland-noctalia-v5.md) for checks, autologin, verification, and recovery.
-
-Run the migration script as the desktop user from a clone of this repository. Preview and prepare the migration:
-
-```bash
-./scripts/migrate-niri-to-hypr.sh prepare --dry-run
-./scripts/migrate-niri-to-hypr.sh prepare
-```
-
-Preparation backs up the old configuration under `${XDG_STATE_HOME:-$HOME/.local/state}/cachyos-hypr-migration/`, installs the CachyOS Hyprland profile, and applies this repository's shortcuts. It removes the recognized Qt 6.11 package pin and moves aside the old qBittorrent 5.2.4 launcher override if they are present. The old qBittorrent binary is left in place. Follow the script's output if it finds a different configuration that needs review. Add `--with-layout` to `prepare` to install the optional Noctalia layout described below.
-
-If preparation reports an existing SDDM autologin, review the file it names before logging out. An old session assignment can bypass the session chooser; temporarily disable that autologin or set its session to `hyprland-uwsm.desktop`. Reboot or log out, select **Hyprland (UWSM)**, and test the session. Then preview and complete the migration from that session:
-
-```bash
-./scripts/migrate-niri-to-hypr.sh finish --dry-run
-./scripts/migrate-niri-to-hypr.sh finish
-```
-
-The finish step checks the live session and refuses to remove Niri while SDDM still selects it for autologin. It then removes the old Niri and Noctalia v4 packages, retains the old files in the migration backup, and uses `pacman -R` without recursive orphan removal. To enable SDDM autologin for this user after the session checks, add `--enable-autologin` to the `finish` command. Preview that change with `finish --dry-run --enable-autologin`.
-
-### Restore from a migration backup
-
-There is no automatic rollback. The script prints its timestamped backup path. It contains `user-config/niri`, `user-config/noctalia`, `user-config/quickshell-noctalia-shell`, and `user-config/hypr` when those files existed, plus `system/pacman.conf`. Retired live directories are under `retired/`.
-
-For example, to restore the saved Niri config when `~/.config/niri` does not exist, replace the example path with the printed backup path:
-
-```bash
-backup_dir="$HOME/.local/state/cachyos-hypr-migration/<run>"
-config_dir="${XDG_CONFIG_HOME:-$HOME/.config}"
-test ! -e "$config_dir/niri" && cp -a "$backup_dir/user-config/niri" "$config_dir/niri"
-```
-
-Inspect the other saved files before copying them to their original locations. Compare `system/pacman.conf` with the current `/etc/pacman.conf` before restoring any package settings. Restoring the old desktop also requires reinstalling its packages and selecting its session in the display manager.
 
 ## Transfer VS Code configuration
 
@@ -165,14 +129,14 @@ Install the optional theme picker and twelve Omarchy palettes independently of t
 ```bash
 ./install.sh --with-themes --dry-run
 ./install.sh --with-themes
-noctalia msg panel-toggle my-cachyos-niri/omarchy-themes:picker
+noctalia msg panel-toggle my-cachyos-hyprland/omarchy-themes:picker
 ```
 
-The picker shows color previews for Catppuccin, Catppuccin Latte, Everforest, Flexoki Light, Gruvbox, Kanagawa, Matte Black, Nord, Ristretto, Rose Pine, Solarized, and Tokyo Night. Selecting a card applies its palette and light or dark mode through Noctalia; CachyOS's enabled Noctalia templates then update supported apps. Wallpapers stay as the user chose them. The picker can also be added as an **Omarchy themes** shortcut in Noctalia's Control Center. To select from a terminal, run `noctalia msg plugin my-cachyos-niri/omarchy-themes:apply all set "Catppuccin Latte"`.
+The picker shows color previews for Catppuccin, Catppuccin Latte, Everforest, Flexoki Light, Gruvbox, Kanagawa, Matte Black, Nord, Ristretto, Rose Pine, Solarized, and Tokyo Night. Selecting a card applies its palette and light or dark mode through Noctalia; CachyOS's enabled Noctalia templates then update supported apps. Wallpapers stay as the user chose them. The picker can also be added as an **Omarchy themes** shortcut in Noctalia's Control Center. To select from a terminal, run `noctalia msg plugin my-cachyos-hyprland/omarchy-themes:apply all set "Catppuccin Latte"`.
 
 The palettes are ports of Omarchy's color files, including the separate Solarized theme. The previews show those colors in a sample UI; they are not Omarchy wallpaper screenshots. The setup script backs up changed files and leaves unrelated palettes and plugins alone. See [noctalia-v5/omarchy-themes/README.md](noctalia-v5/omarchy-themes/README.md) for sources and regeneration details.
 
-The default installer keeps the CachyOS appearance. To install the optional top status bar with a CachyOS app launcher icon, workspaces, and active window in the center and the clock/date on the right, plus a bottom window dock with an Apps button and a separate icon for each open window:
+The default installer keeps the CachyOS appearance. To install the optional macOS-style arrangement with a CachyOS system-menu icon and active window on the left, workspaces in the center, status icons and clock on the right, and Noctalia's always-visible native Dock at the bottom:
 
 ```bash
 ./install.sh --with-layout --dry-run
@@ -195,13 +159,15 @@ hyprctl reload
 hyprctl configerrors
 ```
 
-The custom title bar is configured in `hypr/config/my_desktop.lua` and activates only when Hyprbars is loaded. The profile reloads enabled `hyprpm` plugins at the next Hyprland start. Red closes the window, green toggles maximize, and yellow hides it in Hyprland's `special:minimized` workspace. Super+Shift+M restores a hidden window; use this one window at a time. This is a workspace-based approximation of minimize; the bottom window dock on Hyprland does not restore it like a macOS dock. GNOME apps keep their built-in header bars to avoid two stacked bars. For GTK apps, set the controls on the left with `gsettings set org.gnome.desktop.wm.preferences button-layout 'close,minimize,maximize:'`. The installer leaves existing GTK files untouched; merge the button rules from this repository's `gtk-3.0/` and `gtk-4.0/` files into local GTK CSS if desired. Other apps that draw their own title bar may need a Hyprbars `no_bar` rule or an app-specific setting. Run `hyprpm update` after a Hyprland upgrade so Hyprbars matches the new version.
+The custom title bar is configured in `hypr/config/my_desktop.lua` and activates only when Hyprbars is loaded. The profile reloads enabled `hyprpm` plugins at the next Hyprland start. Red closes the window, green toggles maximize, and yellow hides it in Hyprland's `special:minimized` workspace. Super+Shift+M restores a hidden window; use this one window at a time. This is a workspace-based approximation of minimize; the native Dock on Hyprland does not restore it like a macOS dock. If a floating app opens with its bar under the top panel, hold Super and left-drag anywhere inside the window to move it down. JDownloader 2 does not draw its own close or maximize controls without Hyprbars, so this setup keeps the plugin. GNOME apps keep their built-in header bars to avoid two stacked bars. For GTK apps, set the controls on the left with `gsettings set org.gnome.desktop.wm.preferences button-layout 'close,minimize,maximize:'`. The installer leaves existing GTK files untouched; merge the button rules from this repository's `gtk-3.0/` and `gtk-4.0/` files into local GTK CSS if desired. Other apps that draw their own title bar may need a Hyprbars `no_bar` rule or an app-specific setting. Run `hyprpm update` after a Hyprland upgrade so Hyprbars matches the new version.
 
 ## Share and update
 
-Give another user the repository link and the fresh install instructions above, or the migration steps if they have the previous setup. The shared profile contains no fixed username, monitor ID, avatar, or wallpaper directory. Each user chooses their own displays, input devices, apps, and Noctalia preferences. Applications used by optional shortcuts must be installed separately.
+Give another user the repository link and the fresh install instructions above. The shared profile contains no fixed username, monitor ID, avatar, or wallpaper directory. Each user chooses their own displays, input devices, apps, and Noctalia preferences. Applications used by optional shortcuts must be installed separately.
 
-After pulling or editing this repository, run `./apply.sh --dry-run` followed by `./apply.sh`. Both commands use the same deployer as the first install. The previous `--profile hypr-v5` form is also accepted.
+After pulling or editing this repository, run `./apply.sh --dry-run` followed by `./apply.sh`. If you installed the optional layout or theme picker, repeat `--with-layout` or `--with-themes` on both commands to update those files too. The deployer backs up changed files. The previous `--profile hypr-v5` form is also accepted.
+
+After a `cachyos-hypr-noctalia` package update, review its [release notes](https://github.com/CachyOS/cachyos-hypr-noctalia/releases) and compare `/etc/skel/.config/hypr/` with your `~/.config/hypr/`. Merge relevant changes to CachyOS's base modules and loader, retaining `require("config.my_desktop")`, `config/my_desktop.lua`, and your monitor/input choices. Compare `/etc/skel/.config/noctalia/config.toml` with your `~/.config/noctalia/config.toml` and merge any new CachyOS defaults you want. Package updates do not update copies in your home directory. Keep `zz-shared.toml`, local overlays, and Noctalia's GUI-managed state separate from the base. Then reapply this repository and run `hyprctl reload`, `hyprctl configerrors`, and `noctalia config validate`. Address any Noctalia migration warnings in the named TOML file; its compatibility migrations are temporary.
 
 ## Files
 
@@ -209,7 +175,6 @@ After pulling or editing this repository, run `./apply.sh --dry-run` followed by
 - `noctalia-v5/zz-shared.toml`: optional Noctalia v5 layout and appearance.
 - `noctalia-v5/omarchy-themes/`: optional Omarchy palettes and Noctalia theme picker.
 - `install.sh`, `apply.sh`, and `scripts/install-hypr-v5.sh`: profile validation, backup, and deployment.
-- `scripts/migrate-niri-to-hypr.sh`: migration for the previous desktop setup.
 - [docs/scripts-guide.md](docs/scripts-guide.md): other setup and maintenance scripts.
 
 ## References

@@ -8,7 +8,7 @@ CONFIG_DIR="${NOCTALIA_CONFIG_HOME:-${XDG_CONFIG_HOME:-$HOME/.config}}/noctalia"
 DATA_DIR="${NOCTALIA_DATA_HOME:-${XDG_DATA_HOME:-$HOME/.local/share}}/noctalia"
 PALETTE_DIR="$CONFIG_DIR/palettes"
 PLUGIN_DIR="$DATA_DIR/plugins/omarchy-themes"
-PLUGIN_ID=my-cachyos-niri/omarchy-themes
+PLUGIN_ID=my-cachyos-hyprland/omarchy-themes
 DRY_RUN=false
 
 for arg in "$@"; do
