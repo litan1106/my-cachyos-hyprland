@@ -5,7 +5,7 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
 HYPR_DIR="$CONFIG_DIR/hypr"
-NOCTALIA_DIR="$CONFIG_DIR/noctalia"
+NOCTALIA_DIR="${NOCTALIA_CONFIG_HOME:-$CONFIG_DIR}/noctalia"
 SKEL_HYPR=/etc/skel/.config/hypr
 SKEL_NOCTALIA=/etc/skel/.config/noctalia/config.toml
 NOCTALIA_SOURCE="$REPO_DIR/noctalia-v5/zz-shared.toml"

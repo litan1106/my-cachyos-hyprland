@@ -8,13 +8,13 @@
 Open the picker with:
 
 ```bash
-noctalia msg panel-toggle my-cachyos-niri/omarchy-themes:picker
+noctalia msg panel-toggle my-cachyos-hyprland/omarchy-themes:picker
 ```
 
 The plugin also provides a Control Center shortcut and a command for scripts:
 
 ```bash
-noctalia msg plugin my-cachyos-niri/omarchy-themes:apply all set "Tokyo Night"
+noctalia msg plugin my-cachyos-hyprland/omarchy-themes:apply all set "Tokyo Night"
 ```
 
 The palette files map Omarchy's foreground, background, accent, named colors,

@@ -1,8 +1,8 @@
-id = "my-cachyos-niri/omarchy-themes"
+id = "my-cachyos-hyprland/omarchy-themes"
 name = "Omarchy Themes"
 version = "1.0.0"
 plugin_api = 43
-author = "my-cachyos-niri"
+author = "my-cachyos-hyprland"
 license = "MIT"
 dependencies = []
 tags = ["theming"]

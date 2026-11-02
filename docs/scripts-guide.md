@@ -1,6 +1,6 @@
 # Scripts Guide
 
-Reference for setup and maintenance utilities in [`scripts/`](../scripts/) — one-shot utilities for backing up dev-tool configs (Antigravity CLI, Claude Code, Zed), fixing an AMD GPU monitor-wake bug, setting up SMB/mDNS network discovery, installing/managing gaming platforms (Battle.net, Hearthstone Deck Tracker, Lutris, Hongguo), and setting up Rust (plus Bevy deps), Go, and Docker dev toolchains. The desktop profile installer uses `install-hypr-v5.sh`; run the other utilities directly when needed. See the [README](../README.md) for desktop installation and migration.
+Reference for setup and maintenance utilities in [`scripts/`](../scripts/) — one-shot utilities for backing up dev-tool configs (Antigravity CLI, Claude Code, Zed), fixing an AMD GPU monitor-wake bug, setting up SMB/mDNS network discovery, installing/managing gaming platforms (Battle.net, Hearthstone Deck Tracker, Lutris, Hongguo), and setting up Rust (plus Bevy deps), Go, and Docker dev toolchains. The desktop profile installer uses `install-hypr-v5.sh`; run the other utilities directly when needed. See the [README](../README.md) for desktop installation.
 
 ## Table of Contents
 
