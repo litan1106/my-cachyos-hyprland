@@ -32,7 +32,9 @@ EXTENSIONS = Path(os.environ.get('VSCODE_EXTENSIONS_DIR', str(Path.home() / '.vs
 BACKUPS = Path(os.environ.get('BACKUP_DIR', str(Path.home() / 'backups/vscode'))).absolute()
 CODE = os.environ.get('CODE_BIN', 'code')
 FILES = {'settings.json', 'keybindings.json', 'tasks.json'}
-FLAGS = {'settings', 'keybindings', 'tasks', 'snippets', 'extensions'}
+FLAGS = {'settings', 'keybindings', 'tasks', 'snippets', 'extensions', 'prompts', 'mcp', 'languageModels'}
+# A profile's own copy of these is inactive while it inherits from Default.
+INHERITED_FILES = {'settings.json': 'settings', 'keybindings.json': 'keybindings', 'tasks.json': 'tasks'}
 ID = re.compile(r'[A-Za-z0-9_-]+\Z')
 EXTENSION = re.compile(r'[A-Za-z0-9][A-Za-z0-9_-]*\.[A-Za-z0-9][A-Za-z0-9_.-]*@[A-Za-z0-9][A-Za-z0-9.+_-]*\Z')
 JSONC_TOKEN = re.compile(r'"(?:\\.|[^"\\])*"|//[^\r\n]*|/\*.*?\*/|[{}\[\]:,]|[^\s{}\[\]:,"/]+|/', re.DOTALL)
@@ -138,7 +140,10 @@ def snapshot():
         if profile['name'] is not None:
             prefix = prefix / 'profiles' / profile['id']
         root = CONFIG / str(prefix)
+        inherited = {k for k, v in profile.get('useDefaultFlags', {}).items() if v}
         for filename in sorted(FILES):
+            if INHERITED_FILES[filename] in inherited:
+                continue
             path = root / filename
             no_symlink(path)
             if path.is_file():
@@ -148,7 +153,7 @@ def snapshot():
                 payload[str(prefix / filename)] = data
         snippets = root / 'snippets'
         no_symlink(snippets)
-        if snippets.exists():
+        if snippets.exists() and 'snippets' not in inherited:
             for path in sorted(snippets.rglob('*')):
                 no_symlink(path)
                 if path.is_file():
@@ -269,7 +274,7 @@ def restore_plan(manifest, payload):
         if entry is None:
             entry = {'location': uuid.uuid4().hex, 'name': profile['name']}
             entries.append(entry)
-        # Keep excluded-resource inheritance local, including MCP configuration.
+        # Backup flags replace recorded ones; unlisted flags (e.g. globalState) are kept.
         flags = {k: v for k, v in entry.get('useDefaultFlags', {}).items() if k not in FLAGS}
         flags.update(profile.get('useDefaultFlags', {}))
         entry['useDefaultFlags'] = flags
