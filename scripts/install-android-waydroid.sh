@@ -22,19 +22,43 @@ echo "Installing Waydroid..."
 # helper needed. --needed makes a re-run a no-op if it's already installed.
 sudo pacman -S --needed --noconfirm waydroid
 
-# Enable + start the LXC container service, but only if it isn't already up —
-# a re-run shouldn't bounce a healthy running container.
-if systemctl is-active --quiet waydroid-container.service; then
-  echo "waydroid-container.service is already active."
-else
-  echo "Enabling and starting waydroid-container.service..."
-  sudo systemctl enable --now waydroid-container.service
-fi
+initialization_state() {
+  python3 - <<'PY'
+import configparser
+from pathlib import Path
+import sys
 
-# First-time init only. The system image is multiple GB, so we must NOT
-# re-download it on a re-run. Treat the presence of the config as proof of a
-# prior init (fall back to the per-user data dir if the system path is absent).
-if [[ -f /var/lib/waydroid/waydroid.cfg || -d "$HOME/.local/share/waydroid" ]]; then
+work = Path('/var/lib/waydroid')
+config = work / 'waydroid.cfg'
+try:
+    if config.exists():
+        parser = configparser.ConfigParser(interpolation=None)
+        with config.open() as stream:
+            parser.read_file(stream)
+        images = Path(parser.get('waydroid', 'images_path', fallback=str(work / 'images')))
+        if not parser.has_section('waydroid') or not images.is_absolute():
+            raise ValueError('invalid waydroid.cfg')
+        if not (work / 'rootfs').is_dir():
+            raise ValueError('missing rootfs directory')
+        for name in ('system.img', 'vendor.img'):
+            image = images / name
+            if not image.is_file() or image.stat().st_size == 0:
+                raise ValueError(f'missing or empty image: {image}')
+        print('initialized')
+    elif any((work / name).exists() for name in ('images', 'rootfs', 'lxc', 'overlay', 'overlay_rw')):
+        raise ValueError('system files exist without waydroid.cfg')
+    else:
+        print('fresh')
+except (OSError, ValueError, configparser.Error) as error:
+    print(f'Error: Waydroid initialization is incomplete: {error}.', file=sys.stderr)
+    print('Inspect /var/lib/waydroid before repairing it; no reset was attempted.', file=sys.stderr)
+    sys.exit(1)
+PY
+}
+
+# User profile data can survive uninstalling the system images.
+state=$(initialization_state)
+if [[ "$state" == initialized ]]; then
   echo "Waydroid is already initialized — skipping image download."
   gapps=0
 else
@@ -55,10 +79,23 @@ else
   echo
   echo "Initializing Waydroid with the $image image (this downloads the image)..."
   sudo waydroid init -s "$image"
+  if [[ "$(initialization_state)" != initialized ]]; then
+    echo "Error: Waydroid initialization did not finish. The container was not started." >&2
+    exit 1
+  fi
+fi
+
+if systemctl is-active --quiet waydroid-container.service; then
+  echo "waydroid-container.service is already active."
+else
+  echo "Enabling and starting waydroid-container.service..."
+  sudo systemctl enable --now waydroid-container.service
 fi
 
 # Install the launcher script and desktop entry from this repo.
 install -Dm755 "$script_dir/launch-waydroid.sh" "$HOME/.local/bin/launch-waydroid"
+install -Dm755 "$script_dir/install-waydroid-apk.sh" "$HOME/.local/bin/install-waydroid-apk"
+install -Dm755 "$script_dir/install-waydroid-arm.sh" "$HOME/.local/bin/install-waydroid-arm"
 install -Dm644 "$script_dir/../applications/waydroid.desktop" \
   "$HOME/.local/share/applications/waydroid.desktop"
 # Pin Exec to the absolute launcher path so the menu entry works regardless of
@@ -77,6 +114,15 @@ cat <<EOF
 Waydroid is installed. Start an Android session with:
 
   launch-waydroid
+
+Install a local standalone Android APK with:
+
+  install-waydroid-apk "/path/to/app.apk"
+
+For ARM-only APKs on Android 13, explicitly enable translation first:
+
+  install-waydroid-arm libndk       # AMD
+  install-waydroid-arm libhoudini   # Intel
 
 The first session can take a moment to boot the container. Once you install
 Android apps, Waydroid auto-generates a per-app shortcut in your app menu for

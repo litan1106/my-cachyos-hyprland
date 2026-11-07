@@ -40,6 +40,8 @@ fi
 
 # Remove the installer's artifacts and any auto-generated per-app shortcuts.
 rm -f "$HOME/.local/bin/launch-waydroid"
+rm -f "$HOME/.local/bin/install-waydroid-apk"
+rm -f "$HOME/.local/bin/install-waydroid-arm"
 rm -f "$HOME/.local/share/applications/waydroid.desktop"
 rm -f "$HOME"/.local/share/applications/waydroid.*.desktop
 update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
@@ -47,7 +49,8 @@ update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
 echo
 echo "Done."
 echo "Stopped the Waydroid session and container service (if they were running)."
-echo "Removed the launcher (~/.local/bin/launch-waydroid), the desktop entry, and any"
+echo "Removed launch-waydroid, install-waydroid-apk, and install-waydroid-arm from ~/.local/bin,"
+echo "the desktop entry, and any"
 echo "auto-generated Waydroid app shortcuts."
 if $installed; then
   echo "If you confirmed the prompt, the waydroid package was removed."

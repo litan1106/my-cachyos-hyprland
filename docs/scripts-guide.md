@@ -23,13 +23,16 @@ Reference for setup and maintenance utilities in [`scripts/`](../scripts/) — o
 17. [install-gpu-lib32.sh](#install-gpu-lib32sh)
 18. [setup-local-bin-path.sh](#setup-local-bin-pathsh)
 19. [install-android-waydroid.sh](#install-android-waydroidsh)
-20. [launch-waydroid.sh](#launch-waydroidsh)
-21. [remove-android-waydroid.sh](#remove-android-waydroidsh)
-22. [fix-waydroid-firewall.sh](#fix-waydroid-firewallsh)
-23. [install-rust.sh](#install-rustsh)
-24. [install-bevy.sh](#install-bevysh)
-25. [install-golang.sh](#install-golangsh)
-26. [install-docker.sh](#install-dockersh)
+20. [finish-waydroid-init.py](#finish-waydroid-initpy)
+21. [launch-waydroid.sh](#launch-waydroidsh)
+22. [install-waydroid-apk.sh](#install-waydroid-apksh)
+23. [install-waydroid-arm.sh](#install-waydroid-armsh)
+24. [remove-android-waydroid.sh](#remove-android-waydroidsh)
+25. [fix-waydroid-firewall.sh](#fix-waydroid-firewallsh)
+26. [install-rust.sh](#install-rustsh)
+27. [install-bevy.sh](#install-bevysh)
+28. [install-golang.sh](#install-golangsh)
+29. [install-docker.sh](#install-dockersh)
 
 ---
 
@@ -571,9 +574,9 @@ source ./install-gpu-lib32.sh && install_gpu_lib32
 
 **What it does**:
 1. Installs `waydroid` via `sudo pacman -S --needed --noconfirm` (lives in the `extra` sync repo — no AUR).
-2. Enables and starts `waydroid-container.service` via `systemctl` if it isn't already running (skips if already active, so re-runs are safe).
-3. **First-time init only** (skipped on re-run if `waydroid.cfg` or `~/.local/share/waydroid` exists): prompts whether to use the VANILLA (Google-free LineageOS, recommended default) or GAPPS (Google Play included, requires device registration) system image. Downloads the image (several GB) via `sudo waydroid init -s <image>`. The image is cached so re-running the script does not re-download.
-4. Installs the `launch-waydroid` launcher script to `~/.local/bin/launch-waydroid` (requires `~/.local/bin` on `$PATH`).
+2. Initializes Waydroid before starting the container service. For a new installation, prompts for the VANILLA or GAPPS image and downloads it via `sudo waydroid init -s <image>` (several GB). Initialization is skipped only when the configuration and system/vendor images are valid; an existing user directory alone is insufficient. Incomplete existing installations are reported without resetting them.
+3. Enables and starts `waydroid-container.service` via `systemctl`.
+4. Installs `launch-waydroid`, `install-waydroid-apk`, and `install-waydroid-arm` to `~/.local/bin/` (requires `~/.local/bin` on `$PATH`). Installing the ARM helper does not enable translation; run it explicitly when needed.
 5. Installs the desktop entry to `~/.local/share/applications/waydroid.desktop` and updates the desktop database.
 6. Ensures `~/.local/bin` is on `$PATH` by sourcing [setup-local-bin-path.sh](#setup-local-bin-pathsh) (idempotent).
 7. Prints setup completion and platform-specific notes (GAPPS registration, AMD GPU troubleshooting).
@@ -585,13 +588,30 @@ source ./install-gpu-lib32.sh && install_gpu_lib32
 - **GAPPS** (opt-in): Includes Google Play Services and Play Store. Requires a one-time device registration at `https://www.google.com/android/uncertified` after the first boot (see Warnings below) or Play will refuse to run.
 
 **Notes on ARM apps**:
-- The x86_64 Android image natively runs x86 Android apps. Many Play Store apps are ARM-only; running them requires libhoudini/libndk translation. This is out of scope for the installer — the community `waydroid_script` project documents the process. Waydroid will fail to launch ARM apps until translation is installed.
+- Check the Android image architecture and the APK's native library ABIs before considering ARM translation. For Android 13 on x86_64, [install-waydroid-arm.sh](#install-waydroid-armsh) installs the matching libndk or libhoudini package from a pinned revision of [waydroid_script](https://github.com/casualsnek/waydroid_script). Translation is an explicit step and does not guarantee app compatibility.
 
 **Warnings**:
 - **The CachyOS kernel has `binder` built in** — no `modprobe` step or binder DKMS is needed or present. Do not add it.
 - The first boot can take a moment while the LXC container initializes and the Android system starts.
 - **GAPPS device registration required** (if chosen): After the first boot, read the GSF / Android ID and register it at `https://www.google.com/android/uncertified`. Until you do, Google Play will refuse to run. The registration command is printed when the script finishes; re-run it from a Waydroid session shell.
 - Test Waydroid window handling in Hyprland and configure window rules if needed.
+
+---
+
+## finish-waydroid-init.py
+
+**Purpose**: Finish a default x86_64 Android 13 initialization after the system image downloaded successfully but the vendor download was interrupted or too slow.
+
+Stop the running initializer with **Ctrl+C** before using this utility. Supply a complete vendor ZIP downloaded from an official SourceForge mirror:
+
+```bash
+sudo python3 scripts/finish-waydroid-init.py ~/Downloads/lineage-20.0-20261022-MAINLINE-waydroid_x86_64-vendor.zip
+./scripts/install-android-waydroid.sh
+```
+
+The utility checks the archive against the current official OTA size and SHA-256, verifies that the system image is current, and refuses a running initializer, an existing rootfs/vendor image, or unexpected configuration. It installs the vendor image, backs up `waydroid.cfg`, updates only the vendor timestamp, and invokes normal initialization with the existing GAPPS/VANILLA choice. Equal image timestamps make Waydroid skip downloading completed images. Official OTA URLs are retained. If the archive or existing system image is stale, recovery stops before making changes.
+
+After successful initialization, rerun the base installer to enable the container and refresh desktop helpers. Then configure ARM translation and test the APK. This recovery utility does not reset an initialized Android system.
 
 ---
 
@@ -603,14 +623,15 @@ source ./install-gpu-lib32.sh && install_gpu_lib32
 ```bash
 launch-waydroid                # open the full Android UI (default)
 launch-waydroid --app <package>  # launch a specific Android app by package name
+launch-waydroid --ensure-session # wait for Android to boot without opening the UI
 launch-waydroid --help         # show help
 ```
 
 **What it does**:
 1. Checks that `waydroid` is installed; exits with an error if not.
-2. Ensures the Waydroid session is running — if `waydroid status` shows the session stopped, it starts it in the background (backgrounded via `waydroid session start`; waits 2 seconds for startup).
-3. If `--app <package>` is passed, launches that specific app via `waydroid app launch <package>` (single-window mode).
-4. If no `--app` is given, opens the full Android UI via `waydroid show-full-ui` (displays the entire Android desktop in one window).
+2. Ensures the session is running, handling running and frozen sessions, and waits for Android to boot for up to 120 seconds by default. Set `WAYDROID_START_TIMEOUT` to change the timeout.
+3. With `--ensure-session`, exits after the session is ready. With `--app <package>`, launches that app via `waydroid app launch <package>`.
+4. With no arguments, opens the full Android UI via `waydroid show-full-ui`.
 
 **Prerequisites**: Waydroid must be installed via `install-android-waydroid.sh` first; `~/.local/bin` must be on `$PATH` for the command to resolve.
 
@@ -618,6 +639,48 @@ launch-waydroid --help         # show help
 - The first session can take a moment to boot the LXC container. Subsequent launches are faster.
 - Auto-generated per-app shortcuts appear in your app menu once you install Android apps via the full UI or Play Store.
 - Multi-window apps can carry an app-id like `waydroid.<package>`. Inspect the window in Hyprland before configuring any matching rule.
+
+---
+
+## install-waydroid-apk.sh
+
+**Purpose**: Installs one local standalone APK into Waydroid. The base installer places it at `~/.local/bin/install-waydroid-apk`.
+
+```bash
+install-waydroid-apk APK_PATH
+install-waydroid-apk --help
+```
+
+The helper validates the APK as a ZIP containing `AndroidManifest.xml` and checks native library ABIs under `lib/`. It runs the sibling `launch-waydroid --ensure-session` and refuses installation when Android reports no matching ABI or its ABI list is unavailable. For ARM libraries on x86 Android it also checks that a native bridge is configured. It then runs `waydroid app install` as the desktop user, exposes failures, and lists installed apps. It accepts only one standalone APK; APKS, XAPK, and split APK sets are unsupported. It does not download APKs or install translation automatically.
+
+For example, the Hongguo APK downloaded from the [publisher's site](https://hongguoduanju.com/) on 2026-11-05 is version **7.4.3.32**, package `com.phoenix.read`, SHA-256 `ca3de95c35dac2630e8ffe38ec8875e269472ae3b2ac25643db42c54841d90f1`. Its manifest requires **API 21 (Android 5.0)** and targets API 35; targeting Android 15 does not make Android 15 the minimum. Android 13 supplies API 33 and meets the minimum. This APK contains **ARM64-only** native libraries, so the AMD x86_64 machine needs translation first:
+
+```bash
+install-waydroid-arm libndk
+install-waydroid-apk ~/Downloads/hongguo.apk
+waydroid app list
+launch-waydroid --app com.phoenix.read
+```
+
+For other APKs, choose the package ID from the app list. Installation and bridge properties are prerequisites; they do not prove Hongguo playback, audio, scrolling, relaunch, or updates. Those require a live session and remain unverified until tested. The APK also declares camera and step-counter features, which may be unavailable in Waydroid. These declarations affect Play Store filtering and are not enforced when sideloading ([Android documentation](https://developer.android.com/guide/topics/manifest/uses-feature-element)). The [unofficial native Hongguo client](#install-hongguosh) remains an alternative. If Android connectivity is diagnosed as a firewall issue, see [fix-waydroid-firewall.sh](#fix-waydroid-firewallsh).
+
+---
+
+## install-waydroid-arm.sh
+
+**Purpose**: Explicitly install an Android 13 ARM translation package on an x86_64 Waydroid host.
+
+```bash
+install-waydroid-arm libndk              # AMD
+install-waydroid-arm libhoudini          # Intel
+install-waydroid-arm --remove libndk     # undo libndk, even if Android cannot boot
+```
+
+The helper checks for Android API 33, reuses an already configured bridge, and refuses to replace a conflicting bridge. It requires an explicit `mount_overlays=True` in `/var/lib/waydroid/waydroid.cfg`; direct image modifications are unsupported because the pinned upstream removal path does not mount those images reliably. It installs `git`, `lzip`, and `uv`, checks out upstream revision `48dbfaf34a6ddbe78688c530f9ba1c26522aafb2` under `~/.cache/cachyos-waydroid/`, and creates a temporary Python environment. It invokes the upstream tool with `--android-version 13`, which selects a different translation archive from Android 11. Unknown or modified cached checkouts are rejected.
+
+Setup stops the Android session and restarts its container, so close Android apps first. After installation it waits for Android to boot and checks API 33, the selected bridge, and the advertised `arm64-v8a` ABI. Failed checks report the removal command. Removal does not require a successful Android boot. Neither path wipes app data or changes the Android image flavor; a working bridge still needs app-specific playback testing.
+
+When invoking directly from the repository, use `./scripts/install-waydroid-arm.sh libndk`. After updating these scripts, rerun the base installer to refresh installed helpers.
 
 ---
 
@@ -636,7 +699,7 @@ launch-waydroid --help         # show help
 3. Disables and stops the `waydroid-container.service` via `systemctl` (best-effort; ignores errors if not running).
 4. **Prompts before deleting images and app data** (large, irreversible step): offers to delete `/var/lib/waydroid` (downloaded system/vendor images, multi-GB) and `~/.local/share/waydroid` (your Waydroid profile and all installed app data). If confirmed, deletes both.
 5. **Prompts whether to remove the package** (only if it was installed): confirms and runs `sudo pacman -Rns --noconfirm waydroid` if answered yes.
-6. Removes the launcher script at `~/.local/bin/launch-waydroid`.
+6. Removes `launch-waydroid`, `install-waydroid-apk`, and `install-waydroid-arm` from `~/.local/bin/`. Local APK files are kept. This does not uninstall an ARM bridge or delete the cached upstream checkout; remove a bridge explicitly before removing Waydroid if you are retaining the Android images.
 7. Removes the desktop entry at `~/.local/share/applications/waydroid.desktop`.
 8. Removes any auto-generated per-app shortcuts at `~/.local/share/applications/waydroid.*.desktop` and updates the desktop database.
 9. Prints a summary of what was removed or skipped.
