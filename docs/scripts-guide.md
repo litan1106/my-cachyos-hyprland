@@ -1,38 +1,44 @@
 # Scripts Guide
 
-Reference for setup and maintenance utilities in [`scripts/`](../scripts/) — one-shot utilities for backing up dev-tool configs (Antigravity CLI, Claude Code, Zed), fixing an AMD GPU monitor-wake bug, setting up SMB/mDNS network discovery, installing/managing gaming platforms (Battle.net, Hearthstone Deck Tracker, Lutris, Hongguo), and setting up Rust (plus Bevy deps), Go, and Docker dev toolchains. The desktop profile installer uses `install-hypr-v5.sh`; run the other utilities directly when needed. See the [README](../README.md) for desktop installation.
+Reference for setup and maintenance utilities in [`scripts/`](../scripts/) — one-shot utilities for backing up dev-tool configs (Antigravity CLI, Claude Code, VS Code, Zed), fixing an AMD GPU monitor-wake bug, setting up SMB/mDNS network discovery, installing/managing gaming platforms (Battle.net, Hearthstone Deck Tracker, Lutris, Hongguo), and setting up Rust (plus Bevy deps), Go, and Docker dev toolchains. The desktop profile installer uses `install-hypr-v5.sh`; run the other utilities directly when needed. See the [README](../README.md) for desktop installation.
+
+Run repository script examples from the repository root. Commands such as
+`launch-waydroid` use helpers already installed on `PATH`; their sections explain
+installation prerequisites. See the [documentation index](README.md) for related
+guides.
 
 ## Table of Contents
 
 1. [backup-antigravity.sh](#backup-antigravitysh)
 2. [backup-claude.sh](#backup-claudesh)
-3. [backup-zed.sh](#backup-zedsh)
-4. [fix-monitor-wake.sh](#fix-monitor-wakesh)
-5. [setup_smb_discovery.sh](#setup_smb_discoverysh)
-6. [install-gaming-battlenet.sh](#install-gaming-battlenetsh)
-7. [launch-battlenet.sh](#launch-battlenetsh)
-8. [remove-gaming-battlenet.sh](#remove-gaming-battlenetsh)
-9. [install-gaming-hdt.sh](#install-gaming-hdtsh)
-10. [launch-hdt.sh](#launch-hdtsh)
-11. [remove-gaming-hdt.sh](#remove-gaming-hdtsh)
-12. [install-gaming-lutris.sh](#install-gaming-lutrissh)
-13. [remove-gaming-lutris.sh](#remove-gaming-lutrissh)
-14. [install-hongguo.sh](#install-hongguosh)
-15. [launch-hongguo.sh](#launch-hongguosh)
-16. [remove-hongguo.sh](#remove-hongguosh)
-17. [install-gpu-lib32.sh](#install-gpu-lib32sh)
-18. [setup-local-bin-path.sh](#setup-local-bin-pathsh)
-19. [install-android-waydroid.sh](#install-android-waydroidsh)
-20. [finish-waydroid-init.py](#finish-waydroid-initpy)
-21. [launch-waydroid.sh](#launch-waydroidsh)
-22. [install-waydroid-apk.sh](#install-waydroid-apksh)
-23. [install-waydroid-arm.sh](#install-waydroid-armsh)
-24. [remove-android-waydroid.sh](#remove-android-waydroidsh)
-25. [fix-waydroid-firewall.sh](#fix-waydroid-firewallsh)
-26. [install-rust.sh](#install-rustsh)
-27. [install-bevy.sh](#install-bevysh)
-28. [install-golang.sh](#install-golangsh)
-29. [install-docker.sh](#install-dockersh)
+3. [backup-vscode.sh](#backup-vscodesh)
+4. [backup-zed.sh](#backup-zedsh)
+5. [fix-monitor-wake.sh](#fix-monitor-wakesh)
+6. [setup_smb_discovery.sh](#setup_smb_discoverysh)
+7. [install-gaming-battlenet.sh](#install-gaming-battlenetsh)
+8. [launch-battlenet.sh](#launch-battlenetsh)
+9. [remove-gaming-battlenet.sh](#remove-gaming-battlenetsh)
+10. [install-gaming-hdt.sh](#install-gaming-hdtsh)
+11. [launch-hdt.sh](#launch-hdtsh)
+12. [remove-gaming-hdt.sh](#remove-gaming-hdtsh)
+13. [install-gaming-lutris.sh](#install-gaming-lutrissh)
+14. [remove-gaming-lutris.sh](#remove-gaming-lutrissh)
+15. [install-hongguo.sh](#install-hongguosh)
+16. [launch-hongguo.sh](#launch-hongguosh)
+17. [remove-hongguo.sh](#remove-hongguosh)
+18. [install-gpu-lib32.sh](#install-gpu-lib32sh)
+19. [setup-local-bin-path.sh](#setup-local-bin-pathsh)
+20. [install-android-waydroid.sh](#install-android-waydroidsh)
+21. [finish-waydroid-init.py](#finish-waydroid-initpy)
+22. [launch-waydroid.sh](#launch-waydroidsh)
+23. [install-waydroid-apk.sh](#install-waydroid-apksh)
+24. [install-waydroid-arm.sh](#install-waydroid-armsh)
+25. [remove-android-waydroid.sh](#remove-android-waydroidsh)
+26. [fix-waydroid-firewall.sh](#fix-waydroid-firewallsh)
+27. [install-rust.sh](#install-rustsh)
+28. [install-bevy.sh](#install-bevysh)
+29. [install-golang.sh](#install-golangsh)
+30. [install-docker.sh](#install-dockersh)
 
 ---
 
@@ -42,14 +48,14 @@ Reference for setup and maintenance utilities in [`scripts/`](../scripts/) — o
 
 **Usage**:
 ```bash
-./backup-antigravity.sh                 # create zip backup (default)
-./backup-antigravity.sh --zip   | -z    # create zip in ~/backups/antigravity/
-./backup-antigravity.sh --gist  | -g    # upload to a secret GitHub Gist
-./backup-antigravity.sh --both  | -b    # zip AND gist
-./backup-antigravity.sh --restore | -r <zip>   # restore from a zip backup
-./backup-antigravity.sh --diff    | -d <zip>   # diff a backup against current config
-./backup-antigravity.sh --list    | -l  # list existing backups
-./backup-antigravity.sh --help    | -h  # show help
+./scripts/backup-antigravity.sh                 # create zip backup (default)
+./scripts/backup-antigravity.sh --zip  # create zip in ~/backups/antigravity/; alias: -z
+./scripts/backup-antigravity.sh --gist  # upload to a secret GitHub Gist; alias: -g
+./scripts/backup-antigravity.sh --both  # zip AND gist; alias: -b
+./scripts/backup-antigravity.sh --restore <zip>  # restore from a zip backup; alias: -r <zip>
+./scripts/backup-antigravity.sh --diff <zip>  # diff a backup against current config; alias: -d <zip>
+./scripts/backup-antigravity.sh --list  # list existing backups; alias: -l
+./scripts/backup-antigravity.sh --help  # show help; alias: -h
 ```
 
 **What gets backed up**: `settings.json`, `keybindings.json`, `statusline.sh`, `plugins/`, `mcp_config.json`, `hooks.json` (always checked), plus `skills/` (optional). Missing targets are silently skipped.
@@ -83,13 +89,13 @@ Reference for setup and maintenance utilities in [`scripts/`](../scripts/) — o
 
 **Usage**:
 ```bash
-./backup-claude.sh                    # create zip backup (default)
-./backup-claude.sh --zip    | -z      # create zip in ~/backups/claude/
-./backup-claude.sh --gist   | -g      # upload to a secret GitHub Gist
-./backup-claude.sh --both   | -b      # zip AND gist
-./backup-claude.sh --restore| -r <zip>   # restore from a zip backup
-./backup-claude.sh --list   | -l      # list existing backups
-./backup-claude.sh --help   | -h      # show help
+./scripts/backup-claude.sh                    # create zip backup (default)
+./scripts/backup-claude.sh --zip  # create zip in ~/backups/claude/; alias: -z
+./scripts/backup-claude.sh --gist  # upload to a secret GitHub Gist; alias: -g
+./scripts/backup-claude.sh --both  # zip AND gist; alias: -b
+./scripts/backup-claude.sh --restore <zip>  # restore from a zip backup; alias: -r <zip>
+./scripts/backup-claude.sh --list  # list existing backups; alias: -l
+./scripts/backup-claude.sh --help  # show help; alias: -h
 ```
 
 **What gets backed up**: `CLAUDE.md`, `RTK.md`, `settings.json`, `keybindings.json`, `agents/`, `skills/`, `rules/`, `hooks/`, `mcp-configs/`. Missing targets are skipped.
@@ -113,19 +119,67 @@ Reference for setup and maintenance utilities in [`scripts/`](../scripts/) — o
 
 ---
 
+## backup-vscode.sh
+
+Use the standalone backup script for Linux-to-Linux snapshots of the Default
+profile and all registered user profiles:
+
+```bash
+# Source machine: create a timestamped archive in ~/backups/vscode/
+./scripts/backup-vscode.sh
+./scripts/backup-vscode.sh --list
+
+# Copy the printed archive path to the other machine, for example with scp.
+# Destination machine: inspect changes, then close VS Code and pause Settings Sync.
+./scripts/backup-vscode.sh --diff ~/vscode-backup-TIMESTAMP.zip
+./scripts/backup-vscode.sh --restore ~/vscode-backup-TIMESTAMP.zip
+```
+
+Requires Python 3 and the `code` CLI. Includes settings, keybindings, user tasks,
+snippets, profile names/icons and inheritance for those resources, plus extension
+IDs and versions. Restore registers profiles and reinstalls extensions from the
+Marketplace, which requires network access. Unavailable versions, private/VSIX
+extensions, and extension installation failures are reported; configuration stays
+restored, and the command exits with a failure status. Extension enablement and
+prerelease-channel preferences are not transferred.
+
+MCP configuration, authentication, history, workspace state, extension binaries,
+and machine-specific profile associations are excluded. Project `.vscode/` files
+stay with their repositories. Legacy inline MCP servers in `settings.json` block
+backup and restore; migrate those servers to `mcp.json` in VS Code first. Other
+settings are copied as written, so review absolute
+paths and any credentials you have put in settings before transferring an archive.
+
+Restore previews its writes and asks for confirmation. Before changing an existing
+configuration, it must successfully create a `vscode-pre-restore-*.zip` safety
+snapshot. Profiles are matched by name; existing extra files, extensions, and local
+MCP configuration are retained. The safety archive can be restored with the same
+command to recover overwritten configuration; restore does not delete added files,
+profiles, or extensions. `--diff` exits 0 for no differences, 1 for differences, and
+2 for errors. Config and snippet symlinks are rejected rather than followed.
+
+Environment overrides: `VSCODE_CONFIG_DIR` is the **data root** containing `User/`
+(default `$XDG_CONFIG_HOME/Code`, falling back to `~/.config/Code`), `VSCODE_EXTENSIONS_DIR` defaults to
+`~/.vscode/extensions`, `CODE_BIN` defaults to `code`, and `BACKUP_DIR` defaults to
+`~/backups/vscode`. Use `--help` for all commands. Keep backups outside this Git
+repository. If a custom `code` wrapper overrides profile or directory arguments,
+set `CODE_BIN` to the direct launcher (on Arch/CachyOS, `/usr/share/code/bin/code`).
+
+---
+
 ## backup-zed.sh
 
 **Purpose**: Backs up and restores Zed editor configuration (`~/.config/zed`) — settings, keymap, tasks, debug config, themes, extensions, snippets — via zip or GitHub Gist. Same shared design as `backup-antigravity.sh` (see above).
 
 **Usage**:
 ```bash
-./backup-zed.sh                    # create zip backup (default)
-./backup-zed.sh --zip    | -z      # create zip in ~/backups/zed/
-./backup-zed.sh --gist   | -g      # upload to a secret GitHub Gist
-./backup-zed.sh --both   | -b      # zip AND gist
-./backup-zed.sh --restore| -r <zip>   # restore from a zip backup
-./backup-zed.sh --list   | -l      # list existing backups
-./backup-zed.sh --help   | -h      # show help
+./scripts/backup-zed.sh                    # create zip backup (default)
+./scripts/backup-zed.sh --zip  # create zip in ~/backups/zed/; alias: -z
+./scripts/backup-zed.sh --gist  # upload to a secret GitHub Gist; alias: -g
+./scripts/backup-zed.sh --both  # zip AND gist; alias: -b
+./scripts/backup-zed.sh --restore <zip>  # restore from a zip backup; alias: -r <zip>
+./scripts/backup-zed.sh --list  # list existing backups; alias: -l
+./scripts/backup-zed.sh --help  # show help; alias: -h
 ```
 
 **What gets backed up**: `settings.json`, `keymap.json`, `tasks.json`, `debug.json`, `themes/`, `extensions/`, `snippets/`.
@@ -154,7 +208,7 @@ Reference for setup and maintenance utilities in [`scripts/`](../scripts/) — o
 
 **Usage**:
 ```bash
-sudo ./fix-monitor-wake.sh
+sudo ./scripts/fix-monitor-wake.sh
 ```
 (The script invokes `sudo` internally for the privileged steps, but you'll be prompted for your password regardless of how it's launched.)
 
@@ -179,7 +233,7 @@ sudo ./fix-monitor-wake.sh
 
 **Usage**:
 ```bash
-sudo ./setup_smb_discovery.sh
+sudo ./scripts/setup_smb_discovery.sh
 ```
 Exits 1 immediately if not run as root.
 
@@ -208,7 +262,7 @@ Exits 1 immediately if not run as root.
 
 **Usage**:
 ```bash
-./install-gaming-battlenet.sh
+./scripts/install-gaming-battlenet.sh
 ```
 
 **What it does**:
@@ -262,7 +316,7 @@ launch-battlenet --help          # show help
 
 **Usage**:
 ```bash
-./remove-gaming-battlenet.sh
+./scripts/remove-gaming-battlenet.sh
 ```
 
 **What it does**:
@@ -288,7 +342,7 @@ launch-battlenet --help          # show help
 
 **Usage**:
 ```bash
-./install-gaming-hdt.sh
+./scripts/install-gaming-hdt.sh
 ```
 
 **What it does**:
@@ -338,7 +392,7 @@ launch-hdt --help          # show help
 
 **Usage**:
 ```bash
-./remove-gaming-hdt.sh
+./scripts/remove-gaming-hdt.sh
 ```
 
 **What it does**:
@@ -361,7 +415,7 @@ launch-hdt --help          # show help
 
 **Usage**:
 ```bash
-./install-gaming-lutris.sh
+./scripts/install-gaming-lutris.sh
 ```
 
 **What it does**:
@@ -388,7 +442,7 @@ launch-hdt --help          # show help
 
 **Usage**:
 ```bash
-./remove-gaming-lutris.sh
+./scripts/remove-gaming-lutris.sh
 ```
 
 **What it does**:
@@ -411,9 +465,9 @@ launch-hdt --help          # show help
 
 **Usage**:
 ```bash
-./install-hongguo.sh
+./scripts/install-hongguo.sh
 # Use a newer build:
-HONGGUO_INSTALLER_URL="https://.../hongguo-<ver>-windows-x86_64-setup.exe" ./install-hongguo.sh
+HONGGUO_INSTALLER_URL="https://.../hongguo-<ver>-windows-x86_64-setup.exe" ./scripts/install-hongguo.sh
 ```
 
 **What it does**:
@@ -495,7 +549,7 @@ launch-hongguo --help           # show help
 
 **Usage**:
 ```bash
-./remove-hongguo.sh
+./scripts/remove-hongguo.sh
 ```
 
 **What it does**:
@@ -518,9 +572,9 @@ launch-hongguo --help           # show help
 
 **Usage**:
 ```bash
-./install-gpu-lib32.sh        # standalone
+./scripts/install-gpu-lib32.sh        # standalone
 # or, from another script:
-source ./install-gpu-lib32.sh && install_gpu_lib32
+source ./scripts/install-gpu-lib32.sh && install_gpu_lib32
 ```
 
 **What it does**:
@@ -545,8 +599,8 @@ source ./install-gpu-lib32.sh && install_gpu_lib32
 
 **Usage**:
 ```bash
-./setup-local-bin-path.sh                # environment.d for the systemd user environment
-./setup-local-bin-path.sh --with-bashrc  # also add a ~/.bashrc fallback for TTY/SSH sessions
+./scripts/setup-local-bin-path.sh                # environment.d for the systemd user environment
+./scripts/setup-local-bin-path.sh --with-bashrc  # also add a ~/.bashrc fallback for TTY/SSH sessions
 ```
 
 **What it does**:
@@ -569,7 +623,7 @@ source ./install-gpu-lib32.sh && install_gpu_lib32
 
 **Usage**:
 ```bash
-./install-android-waydroid.sh
+./scripts/install-android-waydroid.sh
 ```
 
 **What it does**:
@@ -690,7 +744,7 @@ When invoking directly from the repository, use `./scripts/install-waydroid-arm.
 
 **Usage**:
 ```bash
-./remove-android-waydroid.sh
+./scripts/remove-android-waydroid.sh
 ```
 
 **What it does**:
@@ -719,9 +773,9 @@ When invoking directly from the repository, use `./scripts/install-waydroid-arm.
 
 **Usage**:
 ```bash
-./fix-waydroid-firewall.sh            # apply the fix
-./fix-waydroid-firewall.sh --revert   # undo the firewall rules it added
-./fix-waydroid-firewall.sh --help     # show help
+./scripts/fix-waydroid-firewall.sh            # apply the fix
+./scripts/fix-waydroid-firewall.sh --revert   # undo the firewall rules it added
+./scripts/fix-waydroid-firewall.sh --help     # show help
 ```
 
 **What it does**:
@@ -747,7 +801,7 @@ When invoking directly from the repository, use `./scripts/install-waydroid-arm.
 
 **Usage**:
 ```bash
-./install-rust.sh
+./scripts/install-rust.sh
 ```
 
 **What it does**:
@@ -771,8 +825,8 @@ When invoking directly from the repository, use `./scripts/install-waydroid-arm.
 
 **Usage**:
 ```bash
-./install-rust.sh   # first, if Rust isn't installed
-./install-bevy.sh
+./scripts/install-rust.sh   # first, if Rust isn't installed
+./scripts/install-bevy.sh
 ```
 
 **What it does**:
@@ -793,7 +847,7 @@ When invoking directly from the repository, use `./scripts/install-waydroid-arm.
 
 **Usage**:
 ```bash
-./install-golang.sh
+./scripts/install-golang.sh
 ```
 
 **What it does**:
@@ -816,7 +870,7 @@ When invoking directly from the repository, use `./scripts/install-waydroid-arm.
 
 **Usage**:
 ```bash
-./install-docker.sh
+./scripts/install-docker.sh
 ```
 
 **What it does**:

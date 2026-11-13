@@ -1,5 +1,9 @@
 # Noctalia v5 overlay
 
+[Documentation index](../docs/README.md) · [Desktop setup](../README.md)
+
+Run repository commands below from the repository root.
+
 `zz-shared.toml` is an optional overlay loaded after CachyOS's `config.toml`. It
 provides a top status bar with a CachyOS system-menu icon and active window on
 the left, workspaces in the center, and status icons plus the clock/date on the
@@ -28,8 +32,8 @@ the shared installer does not run that script. Preview it with `--dry-run`.
 
 Export the resulting settings with `noctalia config export`, review them for
 private values, and keep machine-specific values outside this shared file. Use
-`noctalia config validate` after edits. GUI changes are stored separately and
-can override values in `zz-shared.toml`.
+`noctalia config validate` after edits. GUI changes are stored in
+`~/.local/state/noctalia/settings.toml` and can override values in `zz-shared.toml`.
 
 For twelve selectable Omarchy palettes with color previews, install the separate
 [Omarchy theme picker](omarchy-themes/README.md) with `./install.sh --with-themes`.

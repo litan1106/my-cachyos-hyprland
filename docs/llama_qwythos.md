@@ -1,5 +1,9 @@
 # Qwythos-9B-Claude-Mythos-5-1M-MTP + llama-server for VS Code on AMD RX 9060 XT
 
+[Documentation index](README.md) · [ROCm 7.2 llama.cpp guide](llama_rocm-install-arch.md) · [Current ROCm 10 record](rocm-install-arch.md)
+
+This is a recorded ROCm 7.2 workflow, not a validation of llama-server on ROCm 10.
+
 ## Hardware Profile
 
 - GPU: AMD Radeon RX 9060 XT (RDNA 4, gfx1200, 32 CU, 16 GB VRAM, 170 W TDP)
@@ -20,7 +24,7 @@ With 16 GB VRAM both quants fit comfortably. Q8_0 is recommended for best qualit
 
 ## Benchmark Results (RX 9060 XT)
 
-Measured with `llama-bench -ngl 99 -fa on`:
+These benchmarks are unfinished: no throughput results are recorded. The planned command uses `llama-bench -ngl 99 -fa on`:
 
 | Model                                          | Size      | Prompt (pp512) | Generation (tg128) |
 |------------------------------------------------|-----------|----------------|---------------------|
@@ -80,6 +84,8 @@ HIP_VISIBLE_DEVICES=0 ./build/bin/llama-server \
 ```
 
 **Q6_K (more context headroom):**
+
+The recorded command below selects Q8_0 despite this label; select Q6_K explicitly if that is intended.
 
 ```bash
 HIP_VISIBLE_DEVICES=0 ./build/bin/llama-server \

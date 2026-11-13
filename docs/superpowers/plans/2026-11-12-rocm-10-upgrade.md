@@ -4,6 +4,8 @@ Date: 2026-11-12
 
 ## Execution amendments
 
+Current installed state after the follow-up cleanup: only the ROCm 10 SDK and its locked framework environment remain installed. The 44-package ROCm 7.2 closure and `/opt/rocm` were removed. The earlier side-by-side notes below describe the first migration stage.
+
 During execution the user replaced the missing CTranslate2 checkout and Task 3 with `/home/litan/Projects/llama_cpp`: build the HIP benchmark and completion tools in `build-rocm10/`, verify their linkage and GPU inference, and retain the existing `build/`. The guide's current location is `/home/litan/Projects/my-cachyos-hyprland/docs/rocm-install-arch.md`.
 
 Exact 10.0 was resolved through AMD's architecture-specific archive in the user-owned prefix `/home/litan/.local/opt/rocm-10.0.0-gfx120X-all`. The pacman-owned `/opt/rocm` 7.2.4 installation and repositories remain unchanged. This is the custom-prefix alternative in Task 1, not a distribution package upgrade. The original proposal below is retained as the planning record; its CTranslate2 commands are superseded by this amendment. Actual commands, recovery files and evidence are in `/home/litan/Projects/bfaceswap/logs/rocm-10.0-upgrade/20261113T034906Z/` and the updated guide.

@@ -1,86 +1,14 @@
-## Installing ROCm 7.2 on Arch Linux (CachyOS)
+# llama.cpp with ROCm 7.2 on Arch Linux (CachyOS)
+
+[Documentation index](README.md) · [Current ROCm 10 record](rocm-install-arch.md) · [Qwythos workflow](llama_qwythos.md)
 
 Date: June 2026
 
-This covers installing ROCm 7.2 from the Arch `extra` repository and configuring the environment for building `llama.cpp` with the HIP backend. Tested on CachyOS (kernel `7.0.12-1-cachyos`) with an RX 9060 XT (gfx1200 / RDNA4) discrete GPU alongside a Ryzen 9600X integrated GPU. CachyOS is Arch-based so all `pacman` commands apply as-is.
+This is a recorded ROCm 7.2 workflow for building `llama.cpp` with the HIP backend; it does not validate llama-server on ROCm 10. Tested on CachyOS (kernel `7.0.12-1-cachyos`) with an RX 9060 XT (gfx1200 / RDNA4) discrete GPU alongside a Ryzen 9600X integrated GPU. CachyOS is Arch-based so all `pacman` commands apply as-is.
 
 ---
 
-### Prerequisites
-
-- Arch Linux with an up-to-date system
-- A supported AMD GPU (RDNA4 / gfx1200, e.g. RX 9060 XT)
-- `base-devel` and `cmake` installed
-
-```bash
-sudo pacman -Syu
-sudo pacman -S --needed base-devel cmake git
-```
-
----
-
-### 1. Install the ROCm HIP SDK
-
-ROCm 7.2 is in the official `extra` repo (current version: 7.2.4-1).
-
-```bash
-sudo pacman -S rocm-hip-sdk
-```
-
-This pulls in `rocm-llvm`, `rocblas`, `hipblas`, `hipblaslt`, `miopen-hip`, and the HIP runtime as dependencies. Verify the install:
-
-```bash
-pacman -Qi rocm-hip-sdk | grep Version
-/opt/rocm/bin/hipconfig --version
-```
-
-`hipconfig` is not in PATH until step 3; use the full path here.
-
----
-
-### 2. Add your user to the GPU groups
-
-```bash
-sudo usermod -aG render,video $USER
-```
-
-Log out and back in (or `newgrp render`) for the group change to take effect.
-
----
-
-### 3. Set up environment variables
-
-Add to `~/.bashrc`:
-
-```bash
-export ROCM_PATH=/opt/rocm
-export PATH="$ROCM_PATH/bin:$PATH"
-```
-
-Reload the shell or open a new terminal to pick up the changes.
-
-`HSA_OVERRIDE_GFX_VERSION` is not needed on this hardware -- ROCm 7.2 correctly identifies the RX 9060 XT as `gfx1200` without it.
-
----
-
-### 4. Verify ROCm sees the GPU
-
-```bash
-rocminfo | grep -E 'Name|gfx'
-```
-
-Expected output (abridged):
-
-```
-Name:           gfx1200
-Marketing Name: AMD Radeon RX 9060 XT
-Vendor Name:    AMD
-Name:           gfx1200
-Marketing Name: AMD Ryzen 5 9600X 6-Core Processor
-Vendor Name:    AMD
-```
-
-Both the discrete RX 9060 XT and the Ryzen 9600X iGPU appear as `gfx1200` -- the Ryzen 9000 series uses RDNA4 for its integrated GPU as well. Use `rocm-smi --showid` to find which device index maps to the discrete card.
+For the recorded setup, see the historical ROCm 7.2 [prerequisites](rocm-install-arch.md#prerequisites), [SDK installation](rocm-install-arch.md#1-install-the-rocm-hip-sdk), [GPU groups](rocm-install-arch.md#2-add-your-user-to-the-gpu-groups), [environment](rocm-install-arch.md#3-set-up-environment-variables), and [device check](rocm-install-arch.md#4-verify-rocm-sees-the-gpu). The original llama record listed both GPUs as `gfx1200`; the historical device check instead records the iGPU as `gfx1036`. Verify the device identity and index on the machine in use.
 
 ---
 

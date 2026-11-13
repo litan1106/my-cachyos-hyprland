@@ -1,13 +1,9 @@
-Toggle sidebar
-Previous: Themes
-All books
-▸
-The Omarchy Manual
-▸
-Hotkeys
-Enter fullscreen
-Search
-Hotkeys #
+# Omarchy hotkeys reference
+
+[Documentation index](README.md) · [Repository shortcuts](../README.md) · [Desktop configuration](../hypr/config/my_desktop.lua)
+
+This is a copied upstream Omarchy reference; the repository README and `my_desktop.lua` describe this repository’s own shortcuts and configuration.
+
 You can see all the main keyboard bindings with Super + K.
 
 Navigating #
@@ -278,54 +274,3 @@ CapsLock Space Space	— (mdash)
 CapsLock Space N	Your name (as entered on setup)
 CapsLock Space E	Your email (as entered on setup)
 You can add more of your own by editing ~/.XCompose, then running omarchy-restart-xcompose in the terminal to get the changes picked up.
-
-The Omarchy Manual
-Welcome to Omarchy
-The Basics
-Getting Started
-Navigation
-Themes
-Hotkeys
-Universal Clipboard & History
-Reminders
-Notices
-Text Extraction & Dictation
-Omarchy CLI
-The Applications
-Terminal
-Neovim
-AI
-Development Tools
-Shell Tools
-Shell Functions
-TUIs
-GUIs
-Commercial
-Web Apps
-Gaming
-Filling out PDFs
-Windows VM
-Other Packages
-Configuration
-Updates
-Dotfiles
-Monitors
-Keyboard, Mouse, Trackpad
-System sleep
-Hardware authentication
-Fonts
-Backgrounds
-Prompt
-Branding
-Common tweaks
-Extra themes
-Making your own theme
-The Rest
-Manual installation
-Mac Support
-Troubleshooting
-FAQ
-System snapshots
-Security
-Omarchy on...
-Next: Universal Clipboard & History

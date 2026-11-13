@@ -1,6 +1,8 @@
 # ROCm 10 on CachyOS with llama.cpp and BFS
 
-Tested 2026-11-12 on an RX 9060 XT (`gfx1200`). Evidence is in [the upgrade logs](/home/litan/Projects/bfaceswap/logs/rocm-10.0-upgrade/20261113T034906Z). The running kernel was `7.3.3-1-cachyos`, while `7.3.4` was installed; no reboot or driver change was made.
+[Documentation index](README.md) · [Historical llama.cpp ROCm 7.2 guide](llama_rocm-install-arch.md)
+
+Local evidence links below point to files on the recorded machine and may not resolve elsewhere. Tested 2026-11-12 on an RX 9060 XT (`gfx1200`). Evidence is in [the upgrade logs](/home/litan/Projects/bfaceswap/logs/rocm-10.0-upgrade/20261113T034906Z). The running kernel was `7.3.3-1-cachyos`, while `7.3.4` was installed; no reboot or driver change was made.
 
 AMD's [ROCm 10.0 installation instructions](https://rocm.docs.amd.com/en/docs-10.0.0/install/rocm.html), [TheRock transition guide](https://rocm.docs.amd.com/en/docs-10.0.0/about/transition-guide-TheRock.html), and [PyTorch installation guide](https://rocm.docs.amd.com/projects/ai-ecosystem/en/latest/frameworks/pytorch/install.html) are the primary references. CachyOS is outside AMD's [ROCm 10.0 supported distribution list](https://rocm.docs.amd.com/en/docs-10.0.0/about/release-notes.html#operating-system-support); this record demonstrates local feasibility only.
 
@@ -138,7 +140,7 @@ sudo pacman -S --needed base-devel cmake git
 
 ### 1. Install the ROCm HIP SDK
 
-ROCm 7.2 is in the official `extra` repo (current version: 7.2.4-1).
+At the time of this record, ROCm 7.2 was in the official `extra` repo (version 7.2.4-1).
 
 ```bash
 sudo pacman -S rocm-hip-sdk

@@ -1,5 +1,9 @@
 # Antigravity CLI Customizations — Walkthrough
 
+[Documentation index](README.md)
+
+This is a historical record of machine-local configuration. The plugin and status line implementations are not shipped in this repository.
+
 ## What was created
 
 Two customizations for the Antigravity CLI:
@@ -46,8 +50,8 @@ Restart `agy` → verify with `agy plugin list`
 
 | File | Change |
 |------|--------|
-| [statusline.sh](file:///home/litan/.gemini/antigravity-cli/statusline.sh) | **[NEW]** Optimized status line script |
-| [settings.json](file:///home/litan/.gemini/antigravity-cli/settings.json) | **[MODIFIED]** Added `statusLine` config block |
+| `~/.gemini/antigravity-cli/statusline.sh` | **[NEW]** Optimized status line script |
+| `~/.gemini/antigravity-cli/settings.json` | **[MODIFIED]** Added `statusLine` config block |
 
 ### What the status line shows
 
@@ -88,4 +92,4 @@ Restart `agy` → verify with `agy plugin list`
 
 ### Customizing further
 
-Edit [statusline.sh](file:///home/litan/.gemini/antigravity-cli/statusline.sh) to add/remove segments, change colors (256-color ANSI), adjust icons, or modify the context bar width. Use `/statusline` to toggle built-in components alongside.
+Edit `~/.gemini/antigravity-cli/statusline.sh` to add/remove segments, change colors (256-color ANSI), adjust icons, or modify the context bar width. Use `/statusline` to toggle built-in components alongside.

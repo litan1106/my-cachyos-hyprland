@@ -2,6 +2,9 @@
 
 This repository adds portable shortcuts to the maintained [CachyOS Hyprland + Noctalia setup](https://github.com/CachyOS/cachyos-hypr-noctalia). CachyOS supplies Hyprland and its Lua base configuration; this repository adds an Omarchy-inspired shortcut layer and an optional Noctalia layout.
 
+See the [documentation index](docs/README.md) for desktop customization, scripts,
+editor setup, GPU workflows, and historical records.
+
 ## Fresh install or another account
 
 Select Hyprland during CachyOS installation, or install the profile first. Clone this repository and run the installer as the desktop user:
@@ -28,49 +31,17 @@ Test the launcher, dock, session menu, lock screen, hardware keys, notifications
 
 ## Transfer VS Code configuration
 
-Use the standalone backup script for Linux-to-Linux snapshots of the Default
-profile and all registered user profiles:
+Create a Linux-to-Linux configuration snapshot with `./scripts/backup-vscode.sh`.
+On the destination machine, preview it before restoring:
 
 ```bash
-# Source machine: create a timestamped archive in ~/backups/vscode/
-./scripts/backup-vscode.sh
-./scripts/backup-vscode.sh --list
-
-# Copy the printed archive path to the other machine, for example with scp.
-# Destination machine: inspect changes, then close VS Code and pause Settings Sync.
 ./scripts/backup-vscode.sh --diff ~/vscode-backup-TIMESTAMP.zip
+# Close VS Code and pause Settings Sync before restoring.
 ./scripts/backup-vscode.sh --restore ~/vscode-backup-TIMESTAMP.zip
 ```
 
-Requires Python 3 and the `code` CLI. Includes settings, keybindings, user tasks,
-snippets, profile names/icons and inheritance for those resources, plus extension
-IDs and versions. Restore registers profiles and reinstalls extensions from the
-Marketplace, which requires network access. Unavailable versions, private/VSIX
-extensions, and extension installation failures are reported; configuration stays
-restored, and the command exits with a failure status. Extension enablement and
-prerelease-channel preferences are not transferred.
-
-MCP configuration, authentication, history, workspace state, extension binaries,
-and machine-specific profile associations are excluded. Project `.vscode/` files
-stay with their repositories. Legacy inline MCP servers in `settings.json` block
-backup and restore; migrate those servers to `mcp.json` in VS Code first. Other
-settings are copied as written, so review absolute
-paths and any credentials you have put in settings before transferring an archive.
-
-Restore previews its writes and asks for confirmation. Before changing an existing
-configuration, it must successfully create a `vscode-pre-restore-*.zip` safety
-snapshot. Profiles are matched by name; existing extra files, extensions, and local
-MCP configuration are retained. The safety archive can be restored with the same
-command to recover overwritten configuration; restore does not delete added files,
-profiles, or extensions. `--diff` exits 0 for no differences, 1 for differences, and
-2 for errors. Config and snippet symlinks are rejected rather than followed.
-
-Environment overrides: `VSCODE_CONFIG_DIR` is the **data root** containing `User/`
-(default `$XDG_CONFIG_HOME/Code`, falling back to `~/.config/Code`), `VSCODE_EXTENSIONS_DIR` defaults to
-`~/.vscode/extensions`, `CODE_BIN` defaults to `code`, and `BACKUP_DIR` defaults to
-`~/backups/vscode`. Use `--help` for all commands. Keep backups outside this Git
-repository. If a custom `code` wrapper overrides profile or directory arguments,
-set `CODE_BIN` to the direct launcher (on Arch/CachyOS, `/usr/share/code/bin/code`).
+See the [VS Code backup reference](docs/scripts-guide.md#backup-vscodesh) for
+profiles, extension transfer, exclusions, prerequisites, and recovery behavior.
 
 ## Customize the setup
 
@@ -132,18 +103,21 @@ Install the optional theme picker and twelve Omarchy palettes independently of t
 noctalia msg panel-toggle my-cachyos-hyprland/omarchy-themes:picker
 ```
 
-The picker shows color previews for Catppuccin, Catppuccin Latte, Everforest, Flexoki Light, Gruvbox, Kanagawa, Matte Black, Nord, Ristretto, Rose Pine, Solarized, and Tokyo Night. Selecting a card applies its palette and light or dark mode through Noctalia; CachyOS's enabled Noctalia templates then update supported apps. Wallpapers stay as the user chose them. The picker can also be added as an **Omarchy themes** shortcut in Noctalia's Control Center. To select from a terminal, run `noctalia msg plugin my-cachyos-hyprland/omarchy-themes:apply all set "Catppuccin Latte"`.
+The picker applies twelve Omarchy palettes through Noctalia's app templates.
+See the [theme-picker reference](noctalia-v5/omarchy-themes/README.md) for available
+palettes, terminal commands, source revisions, and regeneration details.
 
-The palettes are ports of Omarchy's color files, including the separate Solarized theme. The previews show those colors in a sample UI; they are not Omarchy wallpaper screenshots. The setup script backs up changed files and leaves unrelated palettes and plugins alone. See [noctalia-v5/omarchy-themes/README.md](noctalia-v5/omarchy-themes/README.md) for sources and regeneration details.
+### Optional layout and title bars
 
-The default installer keeps the CachyOS appearance. To install the optional macOS-style arrangement with a CachyOS system-menu icon and active window on the left, workspaces in the center, status icons and clock on the right, and Noctalia's always-visible native Dock at the bottom:
+For the optional macOS-style top bar and always-visible native Dock, run:
 
 ```bash
 ./install.sh --with-layout --dry-run
 ./install.sh --with-layout
 ```
 
-The flag installs `~/.config/noctalia/zz-shared.toml`. Later runs without the flag leave it in place; move that file aside to return to the CachyOS layout. See [noctalia-v5/README.md](noctalia-v5/README.md) for details.
+See the [layout reference](noctalia-v5/README.md) for Dock behavior, local
+preferences, overlay precedence, and returning to the CachyOS layout.
 
 The profile sets Hyprland window opacity to 1. The provided Foot config also uses an opaque background; installed terminals with their own transparency setting must use an opacity of 1.
 

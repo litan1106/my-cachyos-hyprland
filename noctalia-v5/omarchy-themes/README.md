@@ -1,5 +1,10 @@
 # Omarchy themes for Noctalia
 
+[Documentation index](../../docs/README.md) · [Desktop setup](../../README.md) ·
+[Optional layout](../README.md)
+
+Run repository commands below from the repository root.
+
 `./install.sh --with-themes` installs twelve version 2 custom palettes in
 `~/.config/noctalia/palettes/` and a local Noctalia plugin in
 `~/.local/share/noctalia/plugins/omarchy-themes/`. It can be combined with
@@ -16,6 +21,15 @@ The plugin also provides a Control Center shortcut and a command for scripts:
 ```bash
 noctalia msg plugin my-cachyos-hyprland/omarchy-themes:apply all set "Tokyo Night"
 ```
+
+The picker shows color previews for Catppuccin, Catppuccin Latte, Everforest,
+Flexoki Light, Gruvbox, Kanagawa, Matte Black, Nord, Ristretto, Rose Pine,
+Solarized, and Tokyo Night. Selecting a card applies its palette and light or
+dark mode through Noctalia. Add the **Omarchy themes** shortcut to Noctalia's
+Control Center to open the picker there.
+
+The setup script backs up changed files and leaves unrelated palettes and
+plugins alone.
 
 The palette files map Omarchy's foreground, background, accent, named colors,
 and ANSI terminal colors to Noctalia's roles. Light themes set Noctalia's light
