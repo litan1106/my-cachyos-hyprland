@@ -2,6 +2,16 @@
 
 Date: 2026-11-12
 
+## Execution amendments
+
+During execution the user replaced the missing CTranslate2 checkout and Task 3 with `/home/litan/Projects/llama_cpp`: build the HIP benchmark and completion tools in `build-rocm10/`, verify their linkage and GPU inference, and retain the existing `build/`. The guide's current location is `/home/litan/Projects/my-cachyos-hyprland/docs/rocm-install-arch.md`.
+
+Exact 10.0 was resolved through AMD's architecture-specific archive in the user-owned prefix `/home/litan/.local/opt/rocm-10.0.0-gfx120X-all`. The pacman-owned `/opt/rocm` 7.2.4 installation and repositories remain unchanged. This is the custom-prefix alternative in Task 1, not a distribution package upgrade. The original proposal below is retained as the planning record; its CTranslate2 commands are superseded by this amendment. Actual commands, recovery files and evidence are in `/home/litan/Projects/bfaceswap/logs/rocm-10.0-upgrade/20261113T034906Z/` and the updated guide.
+
+Execution verified the archive, native HIP arithmetic, the isolated llama.cpp build and GPU inference, locked BFS dependencies and FP32/BF16 kernels, active nodes and matching LTX-2.3 model loading, successful short-job history, video metadata/full decoding/browser playback, and separate fresh/warm measurements. The unit suite passed 57 tests. The dynamic diagnostic completed in history but its HTTP output retrieval timed out; its matching local artifact was recovered and checked. Legacy fresh/warm runs completed end to end. Dynamic VRAM remains experimental, memory pressure persists, and a repeatable ROCm-only speedup or accepted user-clip quality has not been established. The guide and BFS runtime guidance now reflect these measured gates; historical 7.2 records were retained.
+
+At the user's subsequent request to keep only ROCm 10, the complete 44-package legacy ROCm 7.2 dependency closure was uninstalled, including system PyTorch/ONNX Runtime integrations. The old prefix and its package-owned profile/loader settings were removed; current BFS and shell defaults select the verified ROCm 10 SDK. Removal and recovery evidence is in `/home/litan/Projects/bfaceswap/logs/rocm-7.2-removal/20261113T043533Z/`. The earlier side-by-side execution notes above describe the initial migration stage, not the current installed state.
+
 ## Objective
 
 Upgrade the CachyOS machine from ROCm 7.2 to a consistent ROCm 10.0 stack, rebuild CTranslate2, update BFS's PyTorch environment, and revise `rocm-install-arch.md` using results from the actual migration. Measure whether the upgrade improves the workloads that currently suffer from loading, offloading and memory pressure.
