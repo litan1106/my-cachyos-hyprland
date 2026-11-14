@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "investigations": [
+    {
+      "recorded_at_utc": "2026-11-14T18:44:32.510769+00:00",
+      "status": "Unresolved; SIGTERM sender unknown; checkpoint at user request",
+      "scope": "Read-only control-path/log/journal/config investigation, no GPU work, no source edits, no tests or process changes. Only this diagnosis record written.",
+      "findings": [
+        {
+          "verified": "Two separate tool sessions returned exit143 with empty output; owned runner and server later absent. Exit143 is consistent with 128+SIGTERM(15); sender and exact signaled process were not recorded.",
+          "evidence": [
+            "offload-disabled-diagnostic.json",
+            "task2-summary.json fresh2",
+            "Codex execution-agent rollout tool outputs"
+          ]
+        },
+        {
+          "verified": "Successful fresh1/retry1 and interrupted fresh2/offload diagnostic use exec_command yield_time_ms1000, no explicit tty/login/shell overrides, followed by empty write_stdin polls yield_time_ms60000. Polling is a wait interval, not a configured benchmark deadline.",
+          "inference": "No evidence supports blaming the shared polling pattern or a fixed 120/180-second timeout: failed run ages differ and unchanged successful runs last longer."
+        },
+        {
+          "verified": "benchmark-bfs.py start_server uses Popen without a new session/process group; finish_server sends SIGINT then after30s SIGTERM and after10s SIGKILL to the owned server process only. This code does not send a termination signal to its own benchmark runner. No summary/result was persisted in interrupted runs.",
+          "source": [
+            "/home/litan/Projects/bfaceswap/scripts/benchmark-bfs.py:184",
+            "/home/litan/Projects/bfaceswap/scripts/benchmark-bfs.py:214",
+            "/home/litan/Projects/bfaceswap/scripts/benchmark-bfs.py:349"
+          ],
+          "inference": "Abrupt runner termination bypassing finally is consistent with the artifacts. Parent/process-group/session cleanup remains a hypothesis; exact live PGID/cgroup was not retained."
+        },
+        {
+          "verified": "No kill/pkill/killall/os.kill/killpg/terminate or nonempty write_stdin tool action was found in the inspected root/agent tool-call windows18:18:45\u201318:40:20 UTC.",
+          "limitation": "This is not a system-wide signal audit and cannot exclude an external sender, execution-manager cleanup or unlogged action."
+        },
+        {
+          "verified": "The inspected user journal has no entries at10:37:20\u201310:40:40 local; targeted system/kernel journal checks identify no relevant SIGTERM sender, OOM kill or new GPU fault for offload diagnostic. The earlier fresh3 GPU page fault is distinct.",
+          "limitation": "Linux does not normally journal every kill signal. Absence of a log does not identify/exclude a sender."
+        },
+        {
+          "verified": "RTK1.1.0 global hook configuration invokes rtk hook codex. RTK config limits govern output sizes; no command runtime timeout appears. Its SQLite history has no recorded benchmark command and no hook decision in this run window (latest hook decision16:57:57 UTC).",
+          "limitation": "No actual rewritten benchmark launch was recorded, so RTK involvement cannot be established from available evidence. Local RTK/Codex process-management source is unavailable; binary behavior not inferred."
+        }
+      ],
+      "runs": [
+        {
+          "name": "fresh1",
+          "tool_session_id": 61242,
+          "start_tool_utc": "2026-11-14T18:12:54.351Z",
+          "benchmark_wall_seconds": 338.47156341200025,
+          "outcome": "success",
+          "polls_yield_ms": 60000
+        },
+        {
+          "name": "fresh2",
+          "tool_session_id": 95794,
+          "runner_pid": null,
+          "server_pid": 15472,
+          "start_tool_utc": "2026-11-14T18:18:51.423Z",
+          "exit_tool_utc": "2026-11-14T18:20:12.932Z",
+          "launch_to_exit_observed_seconds": 81.509,
+          "poll_calls": [
+            {
+              "utc": "18:18:55.519Z",
+              "yield_time_ms": 60000,
+              "result": "session continues"
+            },
+            {
+              "utc": "18:19:59.347Z",
+              "yield_time_ms": 60000,
+              "actual_wait_seconds": 13.5648209,
+              "exit_code": 143
+            }
+          ],
+          "outcome": "interrupted; no completed result"
+        },
+        {
+          "name": "fresh2-retry1",
+          "tool_session_id": 44332,
+          "start_tool_utc": "2026-11-14T18:22:01.378Z",
+          "benchmark_wall_seconds": 326.74278739999954,
+          "outcome": "success",
+          "polls_yield_ms": 60000
+        },
+        {
+          "name": "offload-disabled-diagnostic",
+          "tool_session_id": 15207,
+          "runner_pid": 18467,
+          "server_pid": 18479,
+          "start_tool_utc": "2026-11-14T18:37:29.876Z",
+          "exit_tool_utc": "2026-11-14T18:40:13.706Z",
+          "launch_to_exit_observed_seconds": 163.83,
+          "alive_observed_utc": "2026-11-14T18:38:38.850Z",
+          "poll_calls": [
+            {
+              "utc": "18:37:36.915Z",
+              "yield_time_ms": 60000,
+              "actual_wait_seconds": 60.001750849,
+              "result": "session continues"
+            },
+            {
+              "utc": "18:38:46.549Z",
+              "yield_time_ms": 60000,
+              "actual_wait_seconds": 60.001114765,
+              "result": "session continues"
+            },
+            {
+              "utc": "18:39:50.139Z",
+              "yield_time_ms": 60000,
+              "actual_wait_seconds": 23.547863012,
+              "exit_code": 143
+            }
+          ],
+          "last_stage": "CPU text encoding, before LTXAV sampler; cannot evaluate offload-disabled stability",
+          "outcome": "interrupted; no completed result"
+        }
+      ],
+      "tool_launch_details": {
+        "raw_exec_pattern": "const r = await tools.exec_command({cmd: <SDK env plus benchmark command>, workdir: /home/litan/Projects/bfaceswap, yield_time_ms: 1000, max_output_tokens: 500 or 1000}); text(JSON.stringify(r));",
+        "raw_poll_pattern": "const r = await tools.write_stdin({session_id: <ID>, chars: empty string, yield_time_ms: 60000, max_output_tokens: 500 or 1000}); text(JSON.stringify(r));",
+        "default_fields_not_explicitly_supplied": [
+          "shell",
+          "login",
+          "tty"
+        ],
+        "offload_launch_prefix": "ss -ltnp port8189 check followed by SDK env and benchmark command",
+        "fresh1_launch_prefix": "mkdir evidence directory followed by SDK env and benchmark command",
+        "environment": "ROCM_PATH/HIP_PATH=/home/litan/.local/opt/rocm-10.0.0-gfx120X-all; HIP_VISIBLE_DEVICES=0; SDK bin prepended PATH; HSA_OVERRIDE_GFX_VERSION removed",
+        "wrapper_yields": "functions.exec returned running cell IDs for some60s polls; functions.wait resumed those cells until original write_stdin returned. Same mechanism occurred on successful and interrupted runs."
+      },
+      "execution_environment": {
+        "codex_cli": "0.169.0",
+        "package": "openai-codex0.169.0-1.1",
+        "codex_pid": 8444,
+        "codex_cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/app-graphical.slice/kitty-3543-0.scope",
+        "limitations": "Live process identities are current observations, not retained failed-run PGID/cgroup. App-server daemon stderr log is stale Nov6, no current execution-manager log was available."
+      },
+      "evidence_paths": [
+        "/home/litan/Projects/my-cachyos-hyprland/benchmarks/rocm10/bfs/offload-disabled-diagnostic.json",
+        "/home/litan/Projects/my-cachyos-hyprland/benchmarks/rocm10/bfs/task2-summary.json",
+        "/home/litan/.codex/sessions/2026/11/14/rollout-2026-11-14T10-04-29-01a1db3b-7515-73a0-bc7a-4a11b2d4b831.jsonl",
+        "/home/litan/.codex/hooks.json",
+        "/home/litan/.config/rtk/config.toml",
+        "/home/litan/.local/share/rtk/history.db"
+      ],
+      "next_investigation_not_executed": [
+        {
+          "priority": 1,
+          "proposal": "Before any reproduction, retain launcher/runner/server PID,PPID,PGID,SID,cgroup and command line in a unique artifact directory. Observe process exit times and cgroup memory.events; avoid recording full environment/credentials.",
+          "purpose": "Distinguish direct runner termination from group/session/cgroup cleanup without changing workload behavior."
+        },
+        {
+          "priority": 2,
+          "proposal": "If root authorizes another reproduction, capture incoming SIGTERM siginfo for runner/server with a narrowly scoped signal tracer (for example strace signal=SIGTERM,SIGHUP,SIGINT) when available/allowed. Record si_code,si_pid,si_uid and wrapper exit separately; do not enable system-wide audit or change services automatically.",
+          "purpose": "Identify a sender rather than infer it from143. Tracing adds overhead; classify the run as diagnostic."
+        },
+        {
+          "priority": 3,
+          "proposal": "Optionally first exercise a CPU-only long-running child under the same exec/session/poll wrapper, with signal observation, to separate wrapper lifecycle from BFS/GPU behavior.",
+          "purpose": "A process-manager/session cleanup hypothesis is falsifiable without risking another GPU render. No such test was run."
+        }
+      ],
+      "checkpoint": "User requested stop and resume tomorrow; no further investigation/probes scheduled by this agent. Root owns subsequent scheduling; do not count interrupted offload diagnostic as evidence for or against GPU-fault hypothesis."
+    }
+  ]
+}

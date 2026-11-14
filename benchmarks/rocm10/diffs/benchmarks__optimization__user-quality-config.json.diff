@@ -1,0 +1,21 @@
+--- preflight/benchmarks/optimization/user-quality-config.json
++++ current/benchmarks/optimization/user-quality-config.json
+@@ -35,6 +35,10 @@
+     "prompt_provenance": "Literal prompt in the SHA-256-pinned baseline workflow; no generated caption"
+   },
+   "cases": {
++    "attention-sdpa": {"profile": "attention-sdpa", "changed_factor": "PyTorch attention control"},
++    "attention-split": {"profile": "attention-split", "changed_factor": "split attention"},
++    "attention-quad": {"profile": "attention-quad", "changed_factor": "sub-quadratic attention"},
++    "attention-ck": {"profile": "attention-ck", "changed_factor": "comfy-kitchen attention"},
+     "baseline": {
+       "profile": "legacy",
+       "changed_factor": "none"
+@@ -78,6 +82,7 @@
+     }
+   },
+   "suites": {
++    "attention": ["attention-sdpa", "attention-split", "attention-quad", "attention-ck"],
+     "baseline": [
+       "baseline"
+     ],

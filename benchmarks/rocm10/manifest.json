@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "captured_at_utc": "2026-11-14T18:03:59.855699+00:00",
+  "purpose": "Preflight freeze; experiment records must state commands, sampling intervals, cache definitions, output directories, and unique run IDs.",
+  "roots": {
+    "H": "/home/litan/Projects/my-cachyos-hyprland",
+    "B": "/home/litan/Projects/bfaceswap",
+    "L": "/home/litan/Projects/llama_cpp",
+    "S": "/home/litan/Learning",
+    "W": "/home/litan/Projects/whisper_cpp"
+  },
+  "preflight": {
+    "directory": "preflight/",
+    "commands": "preflight/commands.json",
+    "environment": "preflight/environment.json",
+    "repository_snapshots": "preflight/{S,L,H}-{status,revision,diff}.txt",
+    "backups": [
+      "preflight/B-files.json",
+      "preflight/S-files.json"
+    ],
+    "torch_linkage": "preflight/torch-linkage.log",
+    "native_linkage": "preflight/native-linkage.log",
+    "notes": "Backups and repository snapshots precede planned writers. Git diffs include tracked changes; untracked planned files are preserved in S backups when present.",
+    "bfs_sources": "preflight/B-sources.json"
+  },
+  "environment": {
+    "sdk": "/home/litan/.local/opt/rocm-10.0.0-gfx120X-all",
+    "device": "AMD Radeon RX 9060 XT, gfx1200",
+    "hip_visible_devices": "0",
+    "hsa_override_gfx_version": null,
+    "python": "3.12.13",
+    "pytorch": "2.13.0+rocm10.0.0",
+    "torch_hip": "7.15.26333",
+    "running_kernel": "7.3.4-1-cachyos",
+    "installed_kernel": "linux-cachyos 7.3.4-1",
+    "installed_kernels": [
+      "linux-cachyos 7.3.4-1",
+      "linux-cachyos-lts 6.18.60-2"
+    ]
+  },
+  "checks": {
+    "uv_lock_check": "passed",
+    "uv_pip_check": "passed",
+    "gpu_fp32_bf16": "passed: finite and matches CPU reference",
+    "pytorch_linkage": "matching virtualenv _rocm_sdk_libraries loaded",
+    "native_linkage": "llama-bench resolves native SDK libraries; see log",
+    "bfs_required_models": "passed: six required models verified; preflight/bfs-model-check.log"
+  },
+  "models": {
+    "llama_benchmark": {
+      "source_record": "/home/litan/Projects/bfaceswap/logs/rocm-10.0-upgrade/20261113T034906Z/llama-workload.json",
+      "path": "/home/litan/.cache/huggingface/hub/models--deepreinforce-ai--Ornith-1.0-9B-GGUF/snapshots/3296bc7a404871a72ac3f1903f561459c09b5c17/ornith-1.0-9b-Q8_0.gguf",
+      "expected_bytes": 9527500992,
+      "actual_bytes": 9527500992,
+      "expected_sha256": "d0e4bebaa8b3450c62090df1408f2ee5ccb2094f9c610ffde564a654483d4f37",
+      "actual_sha256": "d0e4bebaa8b3450c62090df1408f2ee5ccb2094f9c610ffde564a654483d4f37",
+      "verified": true,
+      "snapshot": "3296bc7a404871a72ac3f1903f561459c09b5c17",
+      "hash_evidence": "preflight/ornith-sha256.txt"
+    },
+    "translation": {
+      "status": "pending",
+      "intended": "Qwen/Qwen2.5-14B-Instruct-GGUF q4_k_m, three shards",
+      "reason": "Assets unavailable at intended location; user deferred download; no substitute selected."
+    },
+    "whisper": {
+      "status": "pending",
+      "intended": "ggerganov/whisper.cpp ggml-large-v3-q5_0.bin",
+      "reason": "Asset unavailable at intended location; user deferred download."
+    },
+    "bfs": "preflight/B/models.json"
+  },
+  "pending_gates": [
+    "Translation and Whisper measurements await their selected models; no downloads approved.",
+    "BFS and llama measurements remain separate from preflight and require their own recorded experiment evidence."
+  ],
+  "user_decisions": {
+    "model_downloads": "Deferred by user; code preparation allowed, real transcription/translation measurements pending"
+  },
+  "native_builds": {
+    "whisper": "native-builds/whisper.json",
+    "llama_server": "native-builds/llama.json"
+  }
+}

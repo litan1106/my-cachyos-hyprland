@@ -1,0 +1,22 @@
+{
+  "/home/litan/Projects/bfaceswap/ComfyUI": {
+    "revision": "1332fabfcc507aa7c548cd5152071ed494c207e8\n",
+    "status": ""
+  },
+  "/home/litan/Projects/bfaceswap/ComfyUI/custom_nodes/ComfyUI-GGUF": {
+    "revision": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a\n",
+    "status": ""
+  },
+  "/home/litan/Projects/bfaceswap/ComfyUI/custom_nodes/ComfyUI-VideoHelperSuite": {
+    "revision": "4d907bee61e92c2e65af3bd6383a4e4d356126d1\n",
+    "status": ""
+  },
+  "/home/litan/Projects/bfaceswap/ComfyUI/custom_nodes/ComfyUI-KJNodes": {
+    "revision": "ab72eda7ffad6280422d71ab7d54d3fb87c0ba18\n",
+    "status": ""
+  },
+  "/home/litan/Projects/bfaceswap/ComfyUI/custom_nodes/ComfyUI-BFSNodes": {
+    "revision": "1ebfd0c9b6d40b43ca6c12c05143238fedbfc41e\n",
+    "status": ""
+  }
+}

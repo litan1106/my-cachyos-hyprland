@@ -1,0 +1,156 @@
+{
+  "recorded_at_utc": "2026-11-14T18:21:16.684968+00:00",
+  "status": "incomplete: fresh3 GPU page fault",
+  "environment": {
+    "ROCM_PATH": "/home/litan/.local/opt/rocm-10.0.0-gfx120X-all",
+    "HIP_PATH": "/home/litan/.local/opt/rocm-10.0.0-gfx120X-all",
+    "HIP_VISIBLE_DEVICES": "0",
+    "PATH_prefix": "/home/litan/.local/opt/rocm-10.0.0-gfx120X-all/bin",
+    "HSA_OVERRIDE_GFX_VERSION": "unset"
+  },
+  "cache_conditions": "Fresh server process per run; OS disk/model cache uncontrolled. Warm measurements were not started.",
+  "host_activity_before_fresh1": {
+    "load_average_1_5_15": [
+      0.41,
+      0.98,
+      0.72
+    ],
+    "system_swap_used": "1.7 MiB",
+    "note": "Desktop and background applications remained active; no deliberate competing GPU work."
+  },
+  "fresh1": {
+    "report": "/home/litan/Projects/bfaceswap/benchmarks/optimization/rocm10-20261114-task2-fresh1/report.json",
+    "status": "success",
+    "eligible": true,
+    "wall_seconds": 338.47156341200025,
+    "sampling": {
+      "interval_seconds": 2.0,
+      "gpu_method": "rocm-smi -d 0 --showmeminfo vram --json, device 0 VRAM used bytes",
+      "host_method": "Linux /proc process-tree VmRSS and VmSwap",
+      "pid": 14421,
+      "system_swap_page_deltas": {
+        "pswpin": 126037,
+        "pswpout": 1071602
+      },
+      "observed_peak_gpu_vram_bytes": 16843182080,
+      "observed_peak_process_tree_rss_bytes": 27044585472,
+      "observed_peak_process_tree_swap_bytes": 3279966208
+    },
+    "sampler_cached": false,
+    "sampling_observed": true,
+    "artifact_checks": "passed",
+    "server_pid": 14421,
+    "owned_server_stopped": true,
+    "node_wall_seconds_client_observed": {
+      "CLIPTextEncode_395": 124.6162,
+      "CLIPTextEncode_481": 112.6567,
+      "SamplerCustomAdvanced_382": 77.2258,
+      "VAEDecodeTiled_545": 3.8708
+    },
+    "backend_log": "PyTorch attention selected; comfy-kitchen eager and HIP available/enabled, Triton available/disabled. Availability does not establish per-operator execution.",
+    "review": "Parent inspected contact sheet frames 0, 16, 32: guide panel absent; recognizable reference identity; scene/clothing broadly retained; open mouth reduced, especially middle/end; facial proportions and eyebrows more stylized. Scoped to this clip. Human playback and acceptance pending.",
+    "output_sha256": "feb360c838809fad8a3cf6d5c14c92690f192df1770f0b1ded2fc56b2540c072"
+  },
+  "fresh2": {
+    "report": "/home/litan/Projects/bfaceswap/benchmarks/optimization/rocm10-20261114-task2-fresh2/report.json",
+    "benchmark_exit_code": 143,
+    "server_pid": 15472,
+    "server_and_benchmark_present": false,
+    "port_8189": "free after termination",
+    "last_server_stage": "CPU text encoder; log records got prompt",
+    "report_status": "interrupted, zero rows",
+    "result_or_prompt_id_persisted": false,
+    "queue_history": "unavailable because owned server no longer exists",
+    "diagnosis": "Exit 143 is consistent with SIGTERM; sender and exact signaled process unknown. No kernel OOM evidence found. Same invocation and polling pattern as fresh1 except unique prefix. No evidence identifies RTK or unrelated system service as cause.",
+    "cause": null,
+    "started_utc": "2026-11-14T18:18:51.509077+00:00",
+    "last_server_log_write_utc": "2026-11-14T18:19:13.585395+00:00",
+    "exit_observed_utc_upper_bound": "2026-11-14T18:20:40+00:00",
+    "exec_session_id": 95794,
+    "polling": "write_stdin empty poll at 60 seconds, then second poll returned exit 143 after 13.6 seconds",
+    "argv": [
+      ".venv/bin/python",
+      "scripts/benchmark-bfs.py",
+      "--config",
+      "benchmarks/optimization/user-quality-config.json",
+      "--suite",
+      "baseline",
+      "--case",
+      "baseline",
+      "--session",
+      "fresh",
+      "--repeats",
+      "1",
+      "--run-id-prefix",
+      "rocm10-20261114-task2-fresh2"
+    ]
+  },
+  "not_run": [
+    "warm four repeats",
+    "diagnostic trace",
+    "technical playback"
+  ],
+  "limitations": [
+    "Two eligible fresh runs; three-run baseline incomplete.",
+    "Effective comfy-kitchen operator backends and kernel/copy behavior not traced.",
+    "Quality acceptance and playback review remain pending."
+  ],
+  "fresh2_retry": {
+    "run_id": "rocm10-20261114-task2-fresh2-retry1-baseline-1",
+    "status": "success",
+    "wall_seconds": 326.74278739999954,
+    "eligible_for_performance_comparison": true,
+    "sampling": {
+      "interval_seconds": 2.0,
+      "gpu_method": "rocm-smi -d 0 --showmeminfo vram --json, device 0 VRAM used bytes",
+      "host_method": "Linux /proc process-tree VmRSS and VmSwap",
+      "pid": 16159,
+      "system_swap_page_deltas": {
+        "pswpin": 83239,
+        "pswpout": 531230
+      },
+      "observed_peak_gpu_vram_bytes": 16824422400,
+      "observed_peak_process_tree_rss_bytes": 27717144576,
+      "observed_peak_process_tree_swap_bytes": 2375061504
+    },
+    "artifact_checks": "passed",
+    "sampler_cached": false,
+    "server_pid": 16159,
+    "owned_server_stopped": true,
+    "report": "/home/litan/Projects/bfaceswap/benchmarks/optimization/rocm10-20261114-task2-fresh2-retry1/report.json"
+  },
+  "fresh3": {
+    "run_id": "rocm10-20261114-task2-fresh3-baseline-1",
+    "status": "error",
+    "wall_seconds": 267.338080515,
+    "error": "[Errno 104] Connection reset by peer",
+    "prompt_id": "d29a14ea-3f5e-48fe-87a5-1d726b0b9678",
+    "sampling": {
+      "interval_seconds": 2.0,
+      "gpu_method": "rocm-smi -d 0 --showmeminfo vram --json, device 0 VRAM used bytes",
+      "host_method": "Linux /proc process-tree VmRSS and VmSwap",
+      "pid": 17143,
+      "system_swap_page_deltas": {
+        "pswpin": 114453,
+        "pswpout": 102742
+      },
+      "observed_peak_gpu_vram_bytes": 13405921280,
+      "observed_peak_process_tree_rss_bytes": 26871209984,
+      "observed_peak_process_tree_swap_bytes": 282603520
+    },
+    "server_pid": 17143,
+    "retained_server_pid": null,
+    "report": "/home/litan/Projects/bfaceswap/benchmarks/optimization/rocm10-20261114-task2-fresh3/report.json",
+    "runner_exit_code": 1,
+    "server_log": "GPU memory access fault (page not present or supervisor privilege), GPU coredump failed, fatal Python abort after LTXAV load",
+    "kernel_evidence": "task2-fresh3-kernel.log: amdgpu gfxhub page faults attributed to python PID 17143",
+    "cause": "GPU page fault observed; underlying cause not established",
+    "processes_and_port": "runner/server exited; port 8189 free",
+    "evidence_sha256": {
+      "/home/litan/Projects/bfaceswap/benchmarks/optimization/rocm10-20261114-task2-fresh3/report.json": "f309dbb838386fb59ac883a9052466f0548603ebef1807b9ec529509f0c4a20b",
+      "/home/litan/Projects/bfaceswap/benchmarks/optimization/rocm10-20261114-task2-fresh3/baseline-1/server.log": "b29af35ebd3c64c1b21ee363b06fda832b84bc96e75b1338706e8735eb79c6bf",
+      "/home/litan/Projects/bfaceswap/benchmarks/runs/rocm10-20261114-task2-fresh3-baseline-1/result.json": "306bd17701c804c0616c09dbddf8dd8b4c4761d3fb5bf4d6df23ee830362d4b1",
+      "/home/litan/Projects/my-cachyos-hyprland/benchmarks/rocm10/bfs/task2-fresh3-kernel.log": "093507b784f03439fb7368ec4b6939a9765ddc068694871013878b4aaa93e542"
+    }
+  }
+}

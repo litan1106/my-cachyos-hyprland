@@ -1,0 +1,38 @@
+{
+  "scripts/bfs-runtime.py": {
+    "changed": true,
+    "new_trailing_whitespace": []
+  },
+  "config/runtime-profiles.json": {
+    "changed": true,
+    "new_trailing_whitespace": []
+  },
+  "scripts/benchmark-bfs.py": {
+    "changed": true,
+    "new_trailing_whitespace": []
+  },
+  "benchmarks/optimization/config.json": {
+    "changed": true,
+    "new_trailing_whitespace": []
+  },
+  "benchmarks/optimization/user-quality-config.json": {
+    "changed": true,
+    "new_trailing_whitespace": []
+  },
+  "tests/test_benchmark.py": {
+    "changed": true,
+    "new_trailing_whitespace": []
+  },
+  "tests/test_runtime_profiles.py": {
+    "changed": true,
+    "new_trailing_whitespace": []
+  },
+  "README.md": {
+    "changed": false,
+    "new_trailing_whitespace": []
+  },
+  "TUNING_GUIDE.md": {
+    "changed": false,
+    "new_trailing_whitespace": []
+  }
+}

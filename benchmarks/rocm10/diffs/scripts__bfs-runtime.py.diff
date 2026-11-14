@@ -1,0 +1,39 @@
+--- preflight/scripts/bfs-runtime.py
++++ current/scripts/bfs-runtime.py
+@@ -23,6 +23,10 @@
+              '--user-directory', '--temp-directory', '--base-directory',
+              '--previews-directory', '--extra-model-paths-config'}
+ 
++ATTENTION = ('--use-split-cross-attention', '--use-quad-cross-attention',
++             '--use-pytorch-cross-attention', '--use-sage-attention',
++             '--use-flash-attention', '--use-ck-attention')
++
+ 
+ def build_command(root, profile, extra):
+     profiles = json.loads((root / 'config/runtime-profiles.json').read_text())
+@@ -32,12 +36,24 @@
+         option = arg.split('=', 1)[0]
+         if option.startswith('--') and any(name.startswith(option) for name in PROTECTED):
+             raise ValueError(f'Project launch setting cannot be overridden: {arg}')
++    attention = []
++    for arg in [*profiles[profile], *extra]:
++        option = arg.split('=', 1)[0]
++        if option in ATTENTION:
++            if arg != option:
++                raise ValueError(f'Attention flag does not take a value: {arg}')
++            attention.append(option)
++        elif option.startswith('--') and any(name.startswith(option) for name in ATTENTION):
++            raise ValueError(f'Use the full attention flag: {arg}')
++    if len(attention) > 1:
++        raise ValueError(f'Conflicting attention flags: {", ".join(attention)}')
++    default_attention = [] if attention else ['--use-pytorch-cross-attention']
+     dynamic_vram = [] if '--enable-dynamic-vram' in extra else ['--disable-dynamic-vram']
+     return [str(root / '.venv/bin/python'), str(root / 'ComfyUI/main.py'),
+             '--listen', '127.0.0.1', '--port', '8189', '--max-upload-size', '4096',
+             '--input-directory', str(root / 'input'), '--output-directory', str(root / 'output'),
+             '--user-directory', str(root / 'user'), '--temp-directory', str(root / 'temp'),
+-            '--use-pytorch-cross-attention', *dynamic_vram,
++            *default_attention, *dynamic_vram,
+             *profiles[profile], '--preview-method', 'none', *extra]
+ 
+ 

@@ -1,0 +1,7 @@
+Python: 3.12.13
+PyTorch: 2.13.0+rocm10.0.0
+HIP: 7.15.26333
+Device: AMD Radeon RX 9060 XT; architecture: gfx1200; VRAM: 17095983104 bytes
+ROCm GPU 0: AMD Radeon RX 9060 XT; PCI bus: 0000:03:00.0
+torch.float32: finite and matches CPU reference (rtol=0.0001, atol=0.0001)
+torch.bfloat16: finite and matches CPU reference (rtol=0.02, atol=0.02)

@@ -1,0 +1,184 @@
+{
+  "status": "BFS root cause unresolved; post-fault device gate passed; controlled experiment recommended, not run",
+  "gpu_gate": {
+    "started_utc": "2026-11-14T18:33:12.036216+00:00",
+    "command": [
+      "/home/litan/Projects/bfaceswap/.venv/bin/python",
+      "scripts/check-gpu.py"
+    ],
+    "cwd": "/home/litan/Projects/bfaceswap",
+    "timeout_seconds": 60,
+    "environment": {
+      "ROCM_PATH": "/home/litan/.local/opt/rocm-10.0.0-gfx120X-all",
+      "HIP_PATH": "/home/litan/.local/opt/rocm-10.0.0-gfx120X-all",
+      "HIP_VISIBLE_DEVICES": "0",
+      "HSA_OVERRIDE_GFX_VERSION": null,
+      "LD_LIBRARY_PATH": null
+    },
+    "PATH_prefix": "/home/litan/.local/opt/rocm-10.0.0-gfx120X-all/bin",
+    "exit_code": 0,
+    "stdout": "Python: 3.12.13\nPyTorch: 2.13.0+rocm10.0.0\nHIP: 7.15.26333\nDevice: AMD Radeon RX 9060 XT; architecture: gfx1200; VRAM: 17095983104 bytes\nROCm GPU 0: AMD Radeon RX 9060 XT; PCI bus: 0000:03:00.0\ntorch.float32: finite and matches CPU reference (rtol=0.0001, atol=0.0001)\ntorch.bfloat16: finite and matches CPU reference (rtol=0.02, atol=0.02)\n",
+    "stderr": "",
+    "wall_seconds": 2.3823125300004904,
+    "meaning": "Immediate device enumeration and finite small FP32/BF16 kernels pass after crash; large-copy/render stability unproven."
+  },
+  "recorded_at_utc": "2026-11-14T18:35:35.296682+00:00",
+  "scope": "Read-only log/source/metadata investigation; one root-authorized 60-second device gate; only this diagnosis file written; no source edits, render retries, upgrades, overrides, compile, reboot or service changes",
+  "finding": {
+    "verified": "amdgpu gfxhub mapping/protection page faults attributed to server python PID17143; faulty UTCL2 client SDMA0, followed by runtime abort and observer connection reset",
+    "classification": "Illegal GPU memory access/mapping fault observed; no allocator OOM or kernel OOM-kill evidence in the inspected fault window. Host/VRAM pressure exists but is not established as the cause.",
+    "exact_stack_site": "Unavailable: fatal Python log contains no Python/native traceback and GPU coredump failed. Last model-load log is a boundary, not an exact faulting instruction.",
+    "kernel_evidence": {
+      "path": "/home/litan/Projects/my-cachyos-hyprland/benchmarks/rocm10/bfs/task2-fresh3-kernel.log",
+      "local_time": "2026-11-14 10:32:00 America/Los_Angeles",
+      "utc": "2026-11-14T18:32:00Z",
+      "pci": "0000:03:00.0",
+      "pid": 17143,
+      "fault_status": "0x00801B3B",
+      "client": "SDMA0 (0xd)",
+      "walker_error": "0x5",
+      "permission_faults": "0x3",
+      "mapping_error": "0x1",
+      "rw": "0x0",
+      "fault_pages": "0x00007f5ea75e0000 through at least 0x00007f5ea75e9000",
+      "runtime_reported_address": "0x7f5ea75df000",
+      "post_fault_window": "journalctl -k 10:31:45 through 10:33:30 inspected: page faults present; no matching OOM/reset/ring-timeout event found"
+    }
+  },
+  "boundary": {
+    "timeline": "/home/litan/Projects/bfaceswap/benchmarks/optimization/rocm10-20261114-task2-fresh3/baseline-1/timeline.json",
+    "last_node": "382 SamplerCustomAdvanced",
+    "node_entry_elapsed_seconds": 247.283,
+    "connection_reset_wall_seconds": 267.338,
+    "sampling_observed": false,
+    "last_log": "/home/litan/Projects/bfaceswap/benchmarks/optimization/rocm10-20261114-task2-fresh3/baseline-1/server.log:80-87",
+    "last_log_text": "Requested to load LTXAV; loaded completely 10534.67 MB/full load True; GPU memory access fault; coredump failed; fatal Python abort",
+    "source_path_not_proven_stack": [
+      "/home/litan/Projects/bfaceswap/ComfyUI/comfy_extras/nodes_custom_sampler.py:1055 calls guider.sample",
+      "/home/litan/Projects/bfaceswap/ComfyUI/comfy/samplers.py:1242 prepares sampling before inner sampling",
+      "/home/litan/Projects/bfaceswap/ComfyUI/comfy/sampler_helpers.py:201 loads models onto GPU"
+    ],
+    "interpretation": "Failure occurs during sampler preparation or earliest first-forward transfer/compute after LTXAV load; client reports node entry but no sampler progress. Asynchronous failures can surface after their initiating operation."
+  },
+  "comparison": {
+    "same_hashes_as_successful_runs": {
+      "fresh1": true,
+      "fresh2-retry1": true
+    },
+    "artifact_sha256": {
+      "config.json": "265d99289dfbe5ec3d76435a906ea754a3ed17211d03ef93c0f3c63ea614515d",
+      "plan.json": "8cbdfc60bf1575d6df70d0ab60c83ec300253078ecdaaa7f3d868a77b2b0eb85",
+      "versions.json": "4e6c1812639df220b6d349c1643554df3fad0580c3108f38b6f43efb2222336b",
+      "models.json": "b1998db64ae4be26956f430c2a0ca3d620bd348f834077cf3bf126fa00bbc3be",
+      "uv.lock": "d6930a79979d9736b3a3d9ccf996e570342e9a464b8bf12afb2c0d4439b56d97",
+      "baseline-1/workflow-api.json": "c20b58b25f18959f19dea4970e946d38bc5320e9ed186551168a28b139e3599a"
+    },
+    "observed_server_command_identical": true,
+    "source_revisions": {
+      "ComfyUI": "1332fabfcc507aa7c548cd5152071ed494c207e8",
+      "ComfyUI/custom_nodes/ComfyUI-GGUF": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a",
+      "ComfyUI/custom_nodes/ComfyUI-VideoHelperSuite": "4d907bee61e92c2e65af3bd6383a4e4d356126d1",
+      "ComfyUI/custom_nodes/ComfyUI-KJNodes": "ab72eda7ffad6280422d71ab7d54d3fb87c0ba18",
+      "ComfyUI/custom_nodes/ComfyUI-BFSNodes": "1ebfd0c9b6d40b43ca6c12c05143238fedbfc41e"
+    },
+    "source_status": "All five live checkout HEADs match the frozen revisions; git status --porcelain empty in each.",
+    "current_environment": "Python3.12.13; PyTorch2.13.0+rocm10.0.0; HIP7.15.26333; kernel7.3.4-1-cachyos; torchvision0.28.0+rocm10.0.0; torchaudio2.11.0.2+rocm10.0.0; comfy-kitchen0.2.41; triton3.8.0+git4cff872c.rocm10.0.0",
+    "metadata_caveat": "Copied versions.json contains historical ROCm7.2 runtime/package metadata. Current server.log:18, system_stats.json and authorized device gate establish ROCm10; H/benchmarks/rocm10/manifest.json agrees. Historical file is not current runtime evidence.",
+    "model_scope": "Frozen models manifest and graph hashes match; no new large model rehash was run during diagnosis.",
+    "earlier_fresh2_SIGTERM": "Distinct unresolved interruption (exit143), no evidence links its unknown sender/cause to fresh3 GPU fault."
+  },
+  "memory": {
+    "method": "rocm-smi -d 0 --showmeminfo vram --json, device 0 VRAM used bytes; Linux /proc process-tree VmRSS and VmSwap",
+    "interval_seconds": 2.0,
+    "failure_peak_gpu_bytes": 13405921280,
+    "failure_peak_process_rss_bytes": 26871209984,
+    "failure_peak_process_swap_bytes": 282603520,
+    "last_samples": [
+      {
+        "elapsed_seconds": 262.12196563199996,
+        "gpu_vram_used_bytes": [
+          13405921280
+        ],
+        "process_tree": {
+          "rss_bytes": 26461913088,
+          "swap_bytes": 8192
+        }
+      },
+      {
+        "elapsed_seconds": 264.1798977769995,
+        "gpu_vram_used_bytes": [
+          13405921280
+        ],
+        "process_tree": {
+          "rss_bytes": 26461913088,
+          "swap_bytes": 8192
+        }
+      },
+      {
+        "elapsed_seconds": 266.2377513329993,
+        "gpu_vram_used_bytes": [
+          13405921280
+        ],
+        "process_tree": {
+          "rss_bytes": 26461454336,
+          "swap_bytes": 8192
+        }
+      }
+    ],
+    "device_total_bytes": 17095983104,
+    "successful_peak_gpu_bytes": [
+      16843182080,
+      16824422400
+    ],
+    "successful_peak_process_swap_bytes": [
+      3279966208,
+      2375061504
+    ],
+    "interpretation": "Failed run had lower observed GPU and swap peaks than successful runs, with about 3.44 GiB device VRAM unallocated in last sample. Two-second samples may miss spikes; physical availability does not rule out stale/unmapped host buffers, pinning pressure or fragmentation."
+  },
+  "hypotheses": [
+    {
+      "priority": 1,
+      "hypothesis": "Async weight transfer/offload or pinned host-buffer lifetime/mapping issue in sampler preparation or earliest GGUF forward",
+      "support": "Kernel client SDMA0; startup enables two async offload streams and pinned memory; fatal boundary follows LTXAV load; nondeterministic across same graph/runtime.",
+      "source_evidence": [
+        "/home/litan/Projects/bfaceswap/ComfyUI/comfy/model_management.py:1373-1385 default two AMD streams and disable flag",
+        "/home/litan/Projects/bfaceswap/ComfyUI/comfy/model_management.py:1519 stream wait",
+        "/home/litan/Projects/bfaceswap/ComfyUI/comfy/model_management.py:1699 cudaHostRegister",
+        "/home/litan/Projects/bfaceswap/ComfyUI/custom_nodes/ComfyUI-GGUF/ops.py:204-210 nonblocking casts"
+      ],
+      "smallest_controlled_test": "Existing offload-disabled memory case retains legacy lowvram/reserve2 and adds only --disable-async-offload. Run one stability diagnostic after native GPU work releases the device; preserve all logs/timeline/kernel events and do not count as performance measurement.",
+      "falsification": "Same SDMA fault with async offload disabled weakens a multistream-only explanation, although nonblocking/pinned transfers still exist. One success cannot confirm a cause because two unchanged controls already succeeded."
+    },
+    {
+      "priority": 2,
+      "hypothesis": "ROCm runtime/driver mapping failure under combined load or host-pinning pressure independent of async stream count",
+      "support": "Mapping/protection fault with considerable host RSS; GPU math gate passes but does not exercise large model transfers.",
+      "test_if_first_hypothesis_not_supported": "Separate no-pinned case changes only --disable-pinned-memory; retain all other settings. If fault repeats, reduce to transfer/load-only diagnostic in a separately authorized task.",
+      "uncertainty": "No exact buffer ownership, driver stack, coredump or trace is available; do not label a driver bug or resource exhaustion confirmed."
+    }
+  ],
+  "recommendation": {
+    "native_workloads": "Root may proceed with independent native llama baseline following passed device gate; stop and retain evidence if it faults. This does not establish BFS stability.",
+    "next_command_after_root_schedules_exclusive_gpu": [
+      ".venv/bin/python",
+      "scripts/benchmark-bfs.py",
+      "--config",
+      "benchmarks/optimization/user-quality-config.json",
+      "--suite",
+      "memory",
+      "--case",
+      "offload-disabled",
+      "--session",
+      "fresh",
+      "--repeats",
+      "1",
+      "--run-id-prefix",
+      "rocm10-20261114-task2-fault-offload-disabled-UNIQUE"
+    ],
+    "purpose": "Stability diagnostic of one existing factor, not a speed/quality comparison. Full graph retained because failure occurred only under combined model state; smaller shapes/models would confound first test.",
+    "required_evidence": "Owned process exit; prompt/queue/history if alive; timeline; fresh server and kernel logs; existing memory sampler. Compare graph hash and effective launch flags. Do not terminate unrelated services.",
+    "not_authorized_or_performed": "No reproduction render, settings change, upgrade, HSA override or further GPU probe performed by diagnosis agent.",
+    "completion_gate": "Diagnosis remains unresolved until controlled failing-gate repetitions and result evidence identify or narrow the cause."
+  }
+}

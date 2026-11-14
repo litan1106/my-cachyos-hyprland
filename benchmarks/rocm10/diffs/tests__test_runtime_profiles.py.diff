@@ -1,0 +1,67 @@
+--- preflight/tests/test_runtime_profiles.py
++++ current/tests/test_runtime_profiles.py
+@@ -0,0 +1,64 @@
++import importlib.util
++import json
++from pathlib import Path
++import tempfile
++import unittest
++
++ROOT = Path(__file__).resolve().parents[1]
++spec = importlib.util.spec_from_file_location('bfs_runtime', ROOT / 'scripts/bfs-runtime.py')
++runtime = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(runtime)
++
++
++class RuntimeProfileTests(unittest.TestCase):
++    def test_all_attention_flags_in_extra(self):
++        for flag in runtime.ATTENTION:
++            with self.subTest(flag=flag):
++                command = runtime.build_command(ROOT, 'legacy', [flag])
++                self.assertEqual([arg for arg in command if arg in runtime.ATTENTION], [flag])
++
++    def test_profile_and_extra_conflicts_rejected(self):
++        for flag in runtime.ATTENTION:
++            with self.subTest(flag=flag), self.assertRaisesRegex(ValueError, 'Conflicting attention'):
++                runtime.build_command(ROOT, 'attention-sdpa', [flag])
++        with self.assertRaisesRegex(ValueError, 'Conflicting attention'):
++            runtime.build_command(ROOT, 'legacy', list(runtime.ATTENTION[:2]))
++        with tempfile.TemporaryDirectory() as tmp:
++            root = Path(tmp)
++            (root / 'config').mkdir()
++            (root / 'config/runtime-profiles.json').write_text(json.dumps({'bad': list(runtime.ATTENTION[:2])}))
++            with self.assertRaisesRegex(ValueError, 'Conflicting attention'):
++                runtime.build_command(root, 'bad', [])
++
++    def test_abbreviations_and_values_rejected(self):
++        for flag in ['--use-s', '--use-ck-att', '--use-ck-attention=true']:
++            with self.subTest(flag=flag), self.assertRaises(ValueError):
++                runtime.build_command(ROOT, 'legacy', [flag])
++
++    def test_default_and_project_safety(self):
++        command = runtime.build_command(ROOT, 'legacy', [])
++        self.assertEqual([arg for arg in command if arg in runtime.ATTENTION], ['--use-pytorch-cross-attention'])
++        self.assertEqual(command[command.index('--listen') + 1], '127.0.0.1')
++        self.assertEqual(command[command.index('--port') + 1], '8189')
++        self.assertIn('--disable-dynamic-vram', command)
++        self.assertNotIn('--disable-dynamic-vram', runtime.build_command(ROOT, 'legacy', ['--enable-dynamic-vram']))
++        for flag in runtime.PROTECTED:
++            for value in [flag, flag + '=elsewhere', flag[:5]]:
++                with self.subTest(value=value), self.assertRaises(ValueError):
++                    runtime.build_command(ROOT, 'legacy', [value])
++        for option, path in [('--input-directory', 'input'), ('--output-directory', 'output'),
++                             ('--user-directory', 'user'), ('--temp-directory', 'temp')]:
++            self.assertEqual(command[command.index(option) + 1], str(ROOT / path))
++
++    def test_comparison_profiles_are_matched(self):
++        profiles = json.loads((ROOT / 'config/runtime-profiles.json').read_text())
++        for name, flag in [('sdpa', runtime.ATTENTION[2]), ('split', runtime.ATTENTION[0]),
++                           ('quad', runtime.ATTENTION[1]), ('ck', runtime.ATTENTION[5])]:
++            with self.subTest(name=name):
++                self.assertEqual(profiles['attention-' + name], profiles['legacy'] + ['--disable-xformers', flag])
++                command = runtime.build_command(ROOT, 'attention-' + name, [])
++                self.assertEqual([arg for arg in command if arg in runtime.ATTENTION], [flag])
++
++
++if __name__ == '__main__':
++    unittest.main()

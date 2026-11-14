@@ -1,0 +1,6 @@
+ D pi-hole-jv.sh
+ D pi-hole-jv2.sh
+ D pihole-docker.sh
+ M transcribe.py
+?? .gitignore
+?? pihole/

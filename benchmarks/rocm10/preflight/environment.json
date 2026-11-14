@@ -1,0 +1,9 @@
+{
+  "ROCM_PATH": "/home/litan/.local/opt/rocm-10.0.0-gfx120X-all",
+  "HIP_PATH": "/home/litan/.local/opt/rocm-10.0.0-gfx120X-all",
+  "HIP_VISIBLE_DEVICES": "0",
+  "HSA_OVERRIDE_GFX_VERSION": null,
+  "PATH": "/home/litan/.local/opt/rocm-10.0.0-gfx120X-all/bin:/home/litan/.local/opt/rocm-10.0.0-gfx120X-all/llvm/bin:/usr/lib/openai-codex/codex-path:/home/litan/.local/bin:/home/litan/.opencode/bin:/home/litan/.local/bin:/home/litan/.opencode/bin:/home/litan/.codex/tmp/arg0-linux/codex-arg0haOCro:/usr/lib/openai-codex/codex-path:/home/litan/.local/opt/rocm-10.0.0-gfx120X-all/bin:/home/litan/.local/bin:/home/litan/.opencode/bin:/home/litan/.local/bin:/home/litan/.opencode/bin:/opt/miniconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/usr/lib/rustup/bin",
+  "LD_LIBRARY_PATH": null,
+  "VIRTUAL_ENV": null
+}

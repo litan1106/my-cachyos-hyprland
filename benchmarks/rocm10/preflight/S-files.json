@@ -1,0 +1,29 @@
+{
+  "transcribe.py": {
+    "sha256": "ec43064f63572a72fa25d56a13f0c2d2ad7a3a3a721942ee1b335fb97f33f6dd",
+    "backup_sha256": "ec43064f63572a72fa25d56a13f0c2d2ad7a3a3a721942ee1b335fb97f33f6dd"
+  },
+  "translate_srt.py": {
+    "sha256": "c8b339089342c3d17b27d21bb3bb8f440db9c94c133b88cd52e353a109da9dd0",
+    "backup_sha256": "c8b339089342c3d17b27d21bb3bb8f440db9c94c133b88cd52e353a109da9dd0"
+  },
+  "AGENTS.md": {
+    "sha256": "3927eb158b05f2a904d409f2f356c413a7cf36d76196e778bbe357c0b33ea9c8",
+    "backup_sha256": "3927eb158b05f2a904d409f2f356c413a7cf36d76196e778bbe357c0b33ea9c8"
+  },
+  "tests/test_transcribe.py": {
+    "exists": false
+  },
+  "tests/test_translate_srt.py": {
+    "exists": false
+  },
+  "benchmarks/rocm10/config.json": {
+    "exists": false
+  },
+  "benchmarks/rocm10/translation-config.json": {
+    "exists": false
+  },
+  "scripts/benchmark-transcribe.py": {
+    "exists": false
+  }
+}

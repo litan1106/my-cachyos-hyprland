@@ -1,0 +1,31 @@
+{
+  "status": "interrupted",
+  "runner_pid": 18467,
+  "server_pid": 18479,
+  "start_utc": "2026-11-14T18:37:29Z",
+  "exec_session_id": 15207,
+  "scope": "single diagnostic, not a quality or performance winner",
+  "metadata_note": "versions.json contains stale ROCm 7.2 metadata; live packages and gate use ROCm 10",
+  "queue_prompt_ids": [
+    "9119d4f3-299b-480d-a0f3-1a0abe21d579"
+  ],
+  "runner_exit_code": 143,
+  "cause": null,
+  "last_log_write_utc": "2026-11-14T18:37:53.296027+00:00",
+  "exit_observed_utc": "2026-11-14T18:40:32.060444+00:00",
+  "server_and_runner_alive": false,
+  "port_8189": "free",
+  "queue_history": "unavailable after server exit",
+  "last_stage": "CPU text encoding, before LTXAV sampling",
+  "report": "/home/litan/Projects/bfaceswap/benchmarks/optimization/rocm10-20261114-task2-offload-disabled-diagnostic/report.json",
+  "server_log": "/home/litan/Projects/bfaceswap/benchmarks/optimization/rocm10-20261114-task2-offload-disabled-diagnostic/offload-disabled-1/server.log",
+  "evidence_sha256": {
+    "/home/litan/Projects/bfaceswap/benchmarks/optimization/rocm10-20261114-task2-offload-disabled-diagnostic/report.json": "0acde982e8ba517afc1427428f0820b45d95f8ae740444ca78b0625a07f205a0",
+    "/home/litan/Projects/bfaceswap/benchmarks/optimization/rocm10-20261114-task2-offload-disabled-diagnostic/offload-disabled-1/server.log": "99623fde33a42d17437688dccb412e5a4839fb59aabbcd63aa1affd89fbb72c2"
+  },
+  "limitations": [
+    "No result, no stability or quality conclusion.",
+    "No additional attempt authorized.",
+    "Fresh3 prior GPU page fault is distinct; no new kernel fault found in recent journal."
+  ]
+}

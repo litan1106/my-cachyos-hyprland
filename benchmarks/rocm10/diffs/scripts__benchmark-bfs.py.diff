@@ -1,0 +1,11 @@
+--- preflight/scripts/benchmark-bfs.py
++++ current/scripts/benchmark-bfs.py
+@@ -416,7 +416,7 @@
+     os.environ['HIP_PATH'] = rocm_path
+     os.environ['PATH'] = str(Path(rocm_path) / 'bin') + os.pathsep + os.environ.get('PATH', '')
+     parser = argparse.ArgumentParser(description=__doc__)
+-    parser.add_argument('--suite', choices=['baseline', 'memory', 'kernels', 'formats'], default='baseline')
++    parser.add_argument('--suite', choices=['baseline', 'memory', 'kernels', 'formats', 'attention'], default='baseline')
+     parser.add_argument('--case', action='append', help='Select a case within the suite; repeat to select several')
+     parser.add_argument('--repeats', type=int, default=1)
+     parser.add_argument('--session', choices=['fresh', 'warm'], default='fresh', help='Fresh process per run, or one process with unique byte-identical video uploads and first run excluded as warmup')

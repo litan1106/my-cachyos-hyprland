@@ -1,0 +1,21 @@
+--- preflight/benchmarks/optimization/config.json
++++ current/benchmarks/optimization/config.json
+@@ -29,6 +29,10 @@
+     "prompt_provenance": "Literal prompt in the SHA-256-pinned baseline workflow; no generated caption"
+   },
+   "cases": {
++    "attention-sdpa": {"profile": "attention-sdpa", "changed_factor": "PyTorch attention control"},
++    "attention-split": {"profile": "attention-split", "changed_factor": "split attention"},
++    "attention-quad": {"profile": "attention-quad", "changed_factor": "sub-quadratic attention"},
++    "attention-ck": {"profile": "attention-ck", "changed_factor": "comfy-kitchen attention"},
+     "baseline": {"profile": "legacy", "changed_factor": "none"},
+     "gpu-text": {"profile": "gpu-text", "changed_factor": "remove lowvram; retain legacy memory manager"},
+     "offload-one": {"profile": "offload-one", "changed_factor": "one async weight offload stream"},
+@@ -41,6 +45,7 @@
+     "native-fp8": {"profile": "legacy", "requires_model": "transformer_fp8", "changed_factor": "native scaled FP8 LTX-2.3 distilled transformer in place of Q3 GGUF; text encoder, LoRA, schedule and VAEs preserved"}
+   },
+   "suites": {
++    "attention": ["attention-sdpa", "attention-split", "attention-quad", "attention-ck"],
+     "baseline": ["baseline"],
+     "memory": ["baseline", "gpu-text", "offload-one", "offload-disabled", "no-pinned", "reserve-one", "no-cache"],
+     "kernels": ["baseline", "triton", "compile"],

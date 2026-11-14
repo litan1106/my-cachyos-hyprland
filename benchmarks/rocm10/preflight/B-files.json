@@ -1,0 +1,37 @@
+{
+  "scripts/bfs-runtime.py": {
+    "sha256": "2a9cbcd0cfe2abc4d2e1a67d17900727e9161b72f7f791b5a4aefb04550348b9",
+    "backup_sha256": "2a9cbcd0cfe2abc4d2e1a67d17900727e9161b72f7f791b5a4aefb04550348b9"
+  },
+  "config/runtime-profiles.json": {
+    "sha256": "0a415009fd36b03c00cab65b86637accd51911b67d973c5abbb10138640d8832",
+    "backup_sha256": "0a415009fd36b03c00cab65b86637accd51911b67d973c5abbb10138640d8832"
+  },
+  "scripts/benchmark-bfs.py": {
+    "sha256": "2ba8482c266a2ae86d62b3ee8cf8e89d6960a0ef4496c93a3deae5c4cb6fbeb3",
+    "backup_sha256": "2ba8482c266a2ae86d62b3ee8cf8e89d6960a0ef4496c93a3deae5c4cb6fbeb3"
+  },
+  "benchmarks/optimization/config.json": {
+    "sha256": "6f66f1022dbb9c3cb35f56448a903ebdd4d098b8c623ccc8444d5aa21a4dc27b",
+    "backup_sha256": "6f66f1022dbb9c3cb35f56448a903ebdd4d098b8c623ccc8444d5aa21a4dc27b"
+  },
+  "benchmarks/optimization/user-quality-config.json": {
+    "sha256": "4d468eb9fd04cd5b68af1585eead931bef085bd3854490ef07183cce8c694b50",
+    "backup_sha256": "4d468eb9fd04cd5b68af1585eead931bef085bd3854490ef07183cce8c694b50"
+  },
+  "tests/test_benchmark.py": {
+    "sha256": "64587aba5005e8088a7ce45123f82ba973f919bb05f3ad6c37581f089b03ad3b",
+    "backup_sha256": "64587aba5005e8088a7ce45123f82ba973f919bb05f3ad6c37581f089b03ad3b"
+  },
+  "tests/test_runtime_profiles.py": {
+    "exists": false
+  },
+  "README.md": {
+    "sha256": "18de52f762de53d7129142d73a455d6beabca9682771e23779fb0f7cd5169b4d",
+    "backup_sha256": "18de52f762de53d7129142d73a455d6beabca9682771e23779fb0f7cd5169b4d"
+  },
+  "TUNING_GUIDE.md": {
+    "sha256": "22ec2a607becc14e112fc3ab8aab72129a777c5b81b54b9b27ca36ee693af5c7",
+    "backup_sha256": "22ec2a607becc14e112fc3ab8aab72129a777c5b81b54b9b27ca36ee693af5c7"
+  }
+}

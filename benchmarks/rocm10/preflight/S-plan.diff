@@ -1,0 +1,211 @@
+diff --git a/transcribe.py b/transcribe.py
+index f21c568..bba9120 100644
+--- a/transcribe.py
++++ b/transcribe.py
+@@ -1,60 +1,64 @@
+ #!/usr/bin/env python3
++"""
++Stage 2: Transcribe audio/video files to SRT using whisper.cpp with AMD ROCm HIP.
++
++whisper.cpp is called as a subprocess (same pattern as translate_srt.py → llama-cli).
++It supports native HIP (AMD ROCm) via -DGGML_HIP=ON at build time, unlike
++faster-whisper/CTranslate2 which requires a real NVIDIA CUDA driver.
++
++See AGENTS.md for build instructions.
++"""
+ import os
++import sys
+ import argparse
++import subprocess
+ from pathlib import Path
+-import sys
+-from faster_whisper import WhisperModel
+-
+-# --- GPU Override for AMD RX 9060 XT (gfx1200) ---
+-# ROCm's HIP layer emulates the CUDA API, so device="cuda" is correct for AMD.
+-# gfx1200 is not in ROCm's official support list yet; override to treat it as gfx12.
+-os.environ["HSA_OVERRIDE_GFX_VERSION"] = "12.0.0"
+-# Select only the discrete RX 9060 XT (device index 0).
+-# Without this, ROCm may pick up the integrated gfx1036 GPU instead.
+-os.environ["HIP_VISIBLE_DEVICES"] = "0"
+-os.environ["TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL"] = "1"
+-
+-def format_timestamp(seconds):
+-    """Converts seconds to SRT timestamp format (HH:MM:SS,mmm)"""
+-    hours = int(seconds // 3600)
+-    minutes = int((seconds % 3600) // 60)
+-    secs = int(seconds % 60)
+-    millis = int((seconds - int(seconds)) * 1000)
+-    return f"{hours:02}:{minutes:02}:{secs:02},{millis:03}"
+-
+-def write_srt(segments, output_file):
+-    """Writes segments to an SRT file."""
+-    with open(output_file, "w", encoding="utf-8") as f:
+-        for i, segment in enumerate(segments, start=1):
+-            start_time = format_timestamp(segment.start)
+-            end_time = format_timestamp(segment.end)
+-            text = segment.text.strip()
+-            
+-            f.write(f"{i}\n")
+-            f.write(f"{start_time} --> {end_time}\n")
+-            f.write(f"{text}\n\n")
++
++# --- ROCm Environment ---
++# Must be set before any subprocess that touches GPU libraries.
++os.environ["HSA_OVERRIDE_GFX_VERSION"] = "12.0.0"   # Treat gfx1200 as supported gfx12
++os.environ["HIP_VISIBLE_DEVICES"] = "0"              # Discrete RX 9060 XT only
++os.environ["ROCR_VISIBLE_DEVICES"] = "0"             # ROCm runtime device selection
++
++# Ensure ROCm HIP libraries are on LD_LIBRARY_PATH for the whisper-cli subprocess.
++_rocm_lib = "/opt/rocm/lib"
++_ld = os.environ.get("LD_LIBRARY_PATH", "")
++if _rocm_lib not in _ld:
++    os.environ["LD_LIBRARY_PATH"] = _rocm_lib + (":" + _ld if _ld else "")
++
++COMPATIBLE_EXTENSIONS = [".wav", ".mp4", ".mkv", ".mp3", ".m4a", ".mov"]
++
++DEFAULT_MODEL = os.path.expanduser("~/whisper_cpp/models/ggml-large-v3-q5_0.bin")
++DEFAULT_CLI   = os.path.expanduser("~/whisper_cpp/build/bin/whisper-cli")
++
+ 
+ def main():
+-    parser = argparse.ArgumentParser(description="Transcribes audio files using faster_whisper.")
+-    parser.add_argument("-i", "--input_path", required=True, help="Path to a single audio/video file or a directory.")
+-    parser.add_argument("-m", "--model_name", default="large-v3", help="Name of the faster_whisper model to use (default: large-v3).")
+-    parser.add_argument("-l", "--language", default="ja", help="Two-letter language code for transcription.")
+-    parser.add_argument("-o", "--output_directory", help="Directory to save transcription files. Defaults to the input file's directory.")
+-    parser.add_argument("-bs", "--beam_size", type=int, default=5, help="Beam size for beam search.")
++    parser = argparse.ArgumentParser(
++        description="Transcribes audio/video files to SRT using whisper.cpp (AMD ROCm HIP).",
++        formatter_class=argparse.RawTextHelpFormatter,
++    )
++    parser.add_argument("-i", "--input_path", required=True,
++                        help="Single file or directory to transcribe.")
++    parser.add_argument("-m", "--model", default=DEFAULT_MODEL,
++                        help="Path to the GGML model file (default: ggml-large-v3-q5_0.bin).")
++    parser.add_argument("-l", "--language", default="ja",
++                        help="BCP-47 language code of source audio (default: ja).")
++    parser.add_argument("-o", "--output_directory",
++                        help="Directory to save .srt files. Defaults to same dir as input.")
++    parser.add_argument("-w", "--whisper_cli", default=DEFAULT_CLI,
++                        help="Path to the whisper-cli binary.")
++    parser.add_argument("-t", "--threads", type=int, default=4,
++                        help="CPU threads for pre/post-processing (default: 4).")
+     args = parser.parse_args()
+ 
+-    print(f"--- Starting transcription run at {__file__} ---")
+-    
+-    # --- Discover Files ---
++    # --- Discover files ---
+     input_path = Path(args.input_path)
+     files_to_process = []
+-    compatible_extensions = [".wav", ".mp4", ".mkv", ".mp3", ".m4a", ".mov"]
+-
+     if input_path.is_dir():
+         print(f"Searching for files in directory: {input_path}")
+-        for ext in compatible_extensions:
+-            files_to_process.extend(input_path.rglob(f"*{ext}"))
+-    elif input_path.is_file() and input_path.suffix.lower() in compatible_extensions:
++        for ext in COMPATIBLE_EXTENSIONS:
++            files_to_process.extend(sorted(input_path.rglob(f"*{ext}")))
++    elif input_path.is_file() and input_path.suffix.lower() in COMPATIBLE_EXTENSIONS:
+         files_to_process.append(input_path)
+ 
+     if not files_to_process:
+@@ -62,53 +66,61 @@ def main():
+         return
+ 
+     print(f"Found {len(files_to_process)} file(s) to transcribe.")
+-    
+-    # --- Initialize Model ---
+-    print(f"Loading model '{args.model_name}' on device='cuda' with compute_type='float16'...")
+-    try:
+-        # Use "cuda" (which ROCm emulates) and float16 for high speed on RDNA3
+-        model = WhisperModel(args.model_name, device="cuda", compute_type="float16")
+-    except Exception as e:
+-        print(f"Error loading model: {e}")
+-        return
+-
+-    print("Model loaded successfully.")
+     print("---")
+ 
+-    # --- Processing ---
++    whisper_cli = os.path.expanduser(args.whisper_cli)
++    model_path  = os.path.expanduser(args.model)
++
+     for audio_file in files_to_process:
+         print(f"Processing: {audio_file.name}")
+         try:
+-            # Determine output path
++            # --- Determine output path ---
+             if args.output_directory:
+                 output_dir = Path(args.output_directory)
+                 output_dir.mkdir(parents=True, exist_ok=True)
+-                output_path_stem = output_dir / audio_file.stem
++                output_stem = output_dir / audio_file.stem
+             else:
+-                output_path_stem = audio_file.parent / audio_file.stem
+-
+-            output_srt_path = output_path_stem.with_suffix(".srt")
+-
+-            print(f"Transcribing to {output_srt_path}...")
+-            
+-            # Transcribe
+-            # beam_size=5 is used in the example provided by the user
+-            segments, info = model.transcribe(str(audio_file), beam_size=args.beam_size, language=args.language)
+-
+-            print(f"Detected language '{info.language}' with probability {info.language_probability:.2f}")
+-
+-            # Write SRT
+-            # Note: segments is a generator, so we iterate over it to write
+-            write_srt(segments, output_srt_path)
+-
+-            print(f"Saved SRT: {output_srt_path}")
+-
+-        except Exception as e:
+-            print(f"Error processing {audio_file.name}: {e}")
++                output_stem = audio_file.parent / audio_file.stem
++
++            output_srt = output_stem.with_suffix(".srt")
++
++            if output_srt.exists():
++                print(f"Skipping, output already exists: {output_srt}")
++                print("---")
++                continue
++
++            # --- Run whisper-cli ---
++            # -osrt : write SRT file
++            # -of   : output file prefix (whisper-cli appends .srt automatically)
++            command = [
++                whisper_cli,
++                "-m", model_path,
++                "-f", str(audio_file),
++                "-l", args.language,
++                "-t", str(args.threads),
++                "-osrt",
++                "-of", str(output_stem),
++            ]
++
++            print(f"Transcribing → {output_srt}")
++            subprocess.run(command, check=True, env=os.environ)
++            print(f"Saved: {output_srt}")
++
++        except FileNotFoundError:
++            print(
++                f"Error: whisper-cli not found at '{whisper_cli}'.\n"
++                "Build whisper.cpp with HIP support — see AGENTS.md for build instructions.",
++                file=sys.stderr,
++            )
++            return
++        except subprocess.CalledProcessError as e:
++            print(f"Error: whisper-cli exited with code {e.returncode} for {audio_file.name}.",
++                  file=sys.stderr)
+         finally:
+             print("---")
+ 
+     print("Script finished.")
+ 
++
+ if __name__ == "__main__":
+     main()
+\ No newline at end of file

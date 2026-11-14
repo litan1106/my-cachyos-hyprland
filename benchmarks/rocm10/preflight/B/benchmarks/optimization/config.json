@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "inputs": {
+    "video": {
+      "path": "input/source.mp4",
+      "sha256": "bd9a0436947dfe134eb6267737ae86147e5e8854db506e49e34d2f15400dc8a2"
+    },
+    "reference": {
+      "path": "input/reference.png",
+      "sha256": "7eca776063b1b109e573b78d7a063291910e7d9a4c8c25e55a99d555bf148d61"
+    }
+  },
+  "workflow": {
+    "path": "workflows/bfs-v3-sintel-baseline-api.json",
+    "sha256": "fa21e3465d1d480bf37a5211cddb2538cd72fd2784e3d0f094a65a01b00e44a6"
+  },
+  "upstream": {
+    "path": "workflows/bfs-v3-upstream.json",
+    "sha256": "fea2ee4d58504262364e5d728f6cb1496572800e705f9cb9404123f22c86352b"
+  },
+  "frozen_settings": {
+    "frames": 33,
+    "fps": 24,
+    "seed": 1035625245488400,
+    "source_dimensions": [512, 320],
+    "composed_dimensions": [640, 320],
+    "lora_strength": 1.0,
+    "sampling_steps": 8,
+    "prompt_provenance": "Literal prompt in the SHA-256-pinned baseline workflow; no generated caption"
+  },
+  "cases": {
+    "baseline": {"profile": "legacy", "changed_factor": "none"},
+    "gpu-text": {"profile": "gpu-text", "changed_factor": "remove lowvram; retain legacy memory manager"},
+    "offload-one": {"profile": "offload-one", "changed_factor": "one async weight offload stream"},
+    "offload-disabled": {"profile": "offload-disabled", "changed_factor": "disable async weight offloading"},
+    "no-pinned": {"profile": "no-pinned", "changed_factor": "disable pinned host memory"},
+    "reserve-one": {"profile": "reserve-one", "changed_factor": "one GB VRAM reservation"},
+    "no-cache": {"profile": "no-cache", "changed_factor": "disable node result cache"},
+    "triton": {"profile": "triton", "changed_factor": "enable comfy-kitchen Triton backend"},
+    "compile": {"profile": "legacy", "changed_factor": "TorchCompileModel inductor wrapper after BFS LoRA"},
+    "native-fp8": {"profile": "legacy", "requires_model": "transformer_fp8", "changed_factor": "native scaled FP8 LTX-2.3 distilled transformer in place of Q3 GGUF; text encoder, LoRA, schedule and VAEs preserved"}
+  },
+  "suites": {
+    "baseline": ["baseline"],
+    "memory": ["baseline", "gpu-text", "offload-one", "offload-disabled", "no-pinned", "reserve-one", "no-cache"],
+    "kernels": ["baseline", "triton", "compile"],
+    "formats": ["baseline", "native-fp8"]
+  },
+  "blocked_suites": {
+    "formats": "Native scaled FP8 candidate requires the explicit optional transformer_fp8 artifact to pass size/SHA-256 verification before benchmarking. Larger-than-VRAM offloading, model loading and quality remain unverified until measured."
+  }
+}

@@ -1,0 +1,8 @@
+...................Error translating /tmp/tmpywkrvvjv/input.srt: Translation omitted, duplicated, reordered, or changed an entry/timestamp
+.Error: Executable missing/not executable: /no/binary
+Error: Translation GGUF model missing: /no/model; model download is deferred; specify --model when available
+....
+----------------------------------------------------------------------
+Ran 24 tests in 0.036s
+
+OK

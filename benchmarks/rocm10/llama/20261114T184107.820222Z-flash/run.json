@@ -1,0 +1,66 @@
+{
+  "run_id": "20261114T184107.820222Z-flash",
+  "command": [
+    "/home/litan/Projects/llama_cpp/build-rocm10/bin/llama-bench",
+    "-m",
+    "/home/litan/.cache/huggingface/hub/models--deepreinforce-ai--Ornith-1.0-9B-GGUF/snapshots/3296bc7a404871a72ac3f1903f561459c09b5c17/ornith-1.0-9b-Q8_0.gguf",
+    "-r",
+    "3",
+    "-ngl",
+    "999",
+    "-o",
+    "json",
+    "-p",
+    "2048",
+    "-n",
+    "0",
+    "-pg",
+    "2048,1024",
+    "-fa",
+    "off,on,auto"
+  ],
+  "cwd": "/home/litan/Projects/my-cachyos-hyprland/benchmarks/rocm10/llama",
+  "environment": {
+    "ROCM_PATH": "/home/litan/.local/opt/rocm-10.0.0-gfx120X-all",
+    "HIP_PATH": "/home/litan/.local/opt/rocm-10.0.0-gfx120X-all",
+    "HIP_VISIBLE_DEVICES": "0",
+    "HSA_OVERRIDE_GFX_VERSION": null,
+    "PATH": "/home/litan/.local/opt/rocm-10.0.0-gfx120X-all/bin:/home/litan/.local/opt/rocm-10.0.0-gfx120X-all/llvm/bin:/usr/lib/openai-codex/codex-path:/home/litan/.local/bin:/home/litan/.opencode/bin:/home/litan/.local/bin:/home/litan/.opencode/bin:/home/litan/.codex/tmp/arg0-linux/codex-arg0haOCro:/usr/lib/openai-codex/codex-path:/home/litan/.local/opt/rocm-10.0.0-gfx120X-all/bin:/home/litan/.local/bin:/home/litan/.opencode/bin:/home/litan/.local/bin:/home/litan/.opencode/bin:/opt/miniconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/usr/lib/rustup/bin",
+    "LD_LIBRARY_PATH": null
+  },
+  "sdk_version": "10.0.0",
+  "model": "/home/litan/.cache/huggingface/hub/models--deepreinforce-ai--Ornith-1.0-9B-GGUF/snapshots/3296bc7a404871a72ac3f1903f561459c09b5c17/ornith-1.0-9b-Q8_0.gguf",
+  "model_sha256": "d0e4bebaa8b3450c62090df1408f2ee5ccb2094f9c610ffde564a654483d4f37",
+  "binaries": {
+    "llama-bench": {
+      "path": "/home/litan/Projects/llama_cpp/build-rocm10/bin/llama-bench",
+      "sha256": "18b7d8b2e2709be420ebb6b53d87e01c2e1f33ce8d16eb48ea35203a03378de6",
+      "help_exit": 0,
+      "ldd_exit": 0
+    },
+    "llama-completion": {
+      "path": "/home/litan/Projects/llama_cpp/build-rocm10/bin/llama-completion",
+      "sha256": "949e09c9d4ee27a04c50874d3d0c9b10d84b5eef95098bf8fe1d31800a61f3a2",
+      "help_exit": 0,
+      "ldd_exit": 0
+    },
+    "llama-server": {
+      "path": "/home/litan/Projects/llama_cpp/build-rocm10/bin/llama-server",
+      "sha256": "684cf8dc4e9a4a442ad180d0044981af14ec4bc29f058fe5b5f9c6b528086301",
+      "help_exit": 0,
+      "ldd_exit": 0
+    }
+  },
+  "source_revision": "5676dfbe01e7ebe0387913680eee0ed39bf4a363",
+  "source_status": "",
+  "sampling_interval_seconds": 2,
+  "cache_definition": "OS and model caches uncontrolled; process starts fresh",
+  "benchmark_warmup": "normal default; --no-warmup not passed",
+  "timeout_seconds": 7200,
+  "status": "passed",
+  "pid": 19066,
+  "exit_code": 0,
+  "wall_seconds": 313.819824313,
+  "benchmark_rows": 6,
+  "benchmark_valid": true
+}

@@ -1,0 +1,63 @@
+{
+  "bfs-runtime": {
+    "command": [
+      ".venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_runtime_profiles.py"
+    ],
+    "cwd": "/home/litan/Projects/bfaceswap",
+    "exit_code": 0,
+    "utc": "2026-11-14T18:10:42.548563+00:00"
+  },
+  "bfs-benchmark": {
+    "command": [
+      ".venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_benchmark.py"
+    ],
+    "cwd": "/home/litan/Projects/bfaceswap",
+    "exit_code": 0,
+    "utc": "2026-11-14T18:10:42.618356+00:00"
+  },
+  "transcription": {
+    "command": [
+      ".venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_transcribe.py"
+    ],
+    "cwd": "/home/litan/Learning",
+    "exit_code": 0,
+    "utc": "2026-11-14T18:10:42.664851+00:00"
+  },
+  "translation": {
+    "command": [
+      ".venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_translate_srt.py"
+    ],
+    "cwd": "/home/litan/Learning",
+    "exit_code": 0,
+    "utc": "2026-11-14T18:12:23.704919+00:00",
+    "count": 24
+  }
+}

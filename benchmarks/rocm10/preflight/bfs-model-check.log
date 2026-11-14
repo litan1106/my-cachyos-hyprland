@@ -1,0 +1,6 @@
+transformer: size and SHA-256 verified
+text_encoder: size and SHA-256 verified
+projection: size and SHA-256 verified
+video_vae: size and SHA-256 verified
+audio_vae: size and SHA-256 verified
+lora_adaptive: size and SHA-256 verified

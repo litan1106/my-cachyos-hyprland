@@ -1,0 +1,41 @@
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0: [gfxhub] page fault (src_id:0 ring:157 vmid:8 pasid:104)
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:  Process python pid 17143 thread python pid 17143
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:   in page starting at address 0x00007f5ea75e0000 from client 10
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0: GCVM_L2_PROTECTION_FAULT_STATUS:0x00801B3B
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:          Faulty UTCL2 client ID: SDMA0 (0xd)
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:          MORE_FAULTS: 0x1
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:          WALKER_ERROR: 0x5
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:          PERMISSION_FAULTS: 0x3
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:          MAPPING_ERROR: 0x1
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:          RW: 0x0
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0: [gfxhub] page fault (src_id:0 ring:157 vmid:8 pasid:104)
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:  Process python pid 17143 thread python pid 17143
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:   in page starting at address 0x00007f5ea75e1000 from client 10
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0: [gfxhub] page fault (src_id:0 ring:157 vmid:8 pasid:104)
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:  Process python pid 17143 thread python pid 17143
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:   in page starting at address 0x00007f5ea75e2000 from client 10
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0: [gfxhub] page fault (src_id:0 ring:157 vmid:8 pasid:104)
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:  Process python pid 17143 thread python pid 17143
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:   in page starting at address 0x00007f5ea75e3000 from client 10
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0: [gfxhub] page fault (src_id:0 ring:157 vmid:8 pasid:104)
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:  Process python pid 17143 thread python pid 17143
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:   in page starting at address 0x00007f5ea75e4000 from client 10
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0: [gfxhub] page fault (src_id:0 ring:157 vmid:8 pasid:104)
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:  Process python pid 17143 thread python pid 17143
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:   in page starting at address 0x00007f5ea75e5000 from client 10
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0: [gfxhub] page fault (src_id:0 ring:157 vmid:8 pasid:104)
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:  Process python pid 17143 thread python pid 17143
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:   in page starting at address 0x00007f5ea75e6000 from client 10
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0: [gfxhub] page fault (src_id:0 ring:157 vmid:8 pasid:104)
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:  Process python pid 17143 thread python pid 17143
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:   in page starting at address 0x00007f5ea75e7000 from client 10
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0: [gfxhub] page fault (src_id:0 ring:157 vmid:8 pasid:104)
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:  Process python pid 17143 thread python pid 17143
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:   in page starting at address 0x00007f5ea75e8000 from client 10
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0: [gfxhub] page fault (src_id:0 ring:157 vmid:8 pasid:104)
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:  Process python pid 17143 thread python pid 17143
+Nov 14 10:32:00 cachyos-tuf850 kernel: amdgpu 0000:03:00.0:   in page starting at address 0x00007f5ea75e9000 from client 10
+Nov 14 10:32:03 cachyos-tuf850 kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=01:00:5e:00:00:01:10:27:f5:16:de:1b:08:00 SRC=192.168.0.1 DST=224.0.0.1 LEN=32 TOS=0x00 PREC=0x00 TTL=1 ID=56670 DF PROTO=2 
+Nov 14 10:32:04 cachyos-tuf850 kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=01:00:5e:00:00:fb:42:e0:c8:69:23:db:08:00 SRC=192.168.0.200 DST=224.0.0.251 LEN=32 TOS=0x00 PREC=0x00 TTL=1 ID=37003 PROTO=2 
+Nov 14 10:32:04 cachyos-tuf850 kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=01:00:5e:00:00:fb:48:a2:e6:4e:f9:00:08:00 SRC=192.168.0.106 DST=224.0.0.251 LEN=32 TOS=0x00 PREC=0x00 TTL=1 ID=8244 PROTO=2 
+Nov 14 10:32:04 cachyos-tuf850 kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=01:00:5e:7f:ff:fa:48:8d:36:4d:91:ca:08:00 SRC=192.168.0.181 DST=239.255.255.250 LEN=32 TOS=0x00 PREC=0xC0 TTL=1 ID=0 DF PROTO=2 

@@ -1,0 +1,96 @@
+{
+  "uv-lock-check": {
+    "argv": [
+      "uv",
+      "lock",
+      "--check"
+    ],
+    "cwd": "/home/litan/Projects/bfaceswap",
+    "exit_code": 0,
+    "output": "preflight/uv-lock-check.log"
+  },
+  "uv-pip-check": {
+    "argv": [
+      "uv",
+      "pip",
+      "check"
+    ],
+    "cwd": "/home/litan/Projects/bfaceswap",
+    "exit_code": 0,
+    "output": "preflight/uv-pip-check.log"
+  },
+  "gpu-check": {
+    "argv": [
+      ".venv/bin/python",
+      "scripts/check-gpu.py"
+    ],
+    "cwd": "/home/litan/Projects/bfaceswap",
+    "exit_code": 0,
+    "output": "preflight/gpu-check.log"
+  },
+  "kernel": {
+    "argv": [
+      "uname",
+      "-a"
+    ],
+    "cwd": "/home/litan/Projects/bfaceswap",
+    "exit_code": 0,
+    "output": "preflight/kernel.log"
+  },
+  "installed-kernels": {
+    "argv": [
+      "pacman",
+      "-Q",
+      "linux-cachyos",
+      "linux-cachyos-headers"
+    ],
+    "cwd": "/home/litan/Projects/bfaceswap",
+    "exit_code": 0,
+    "output": "preflight/installed-kernels.log"
+  },
+  "gpu-identity": {
+    "argv": [
+      "lspci",
+      "-nn"
+    ],
+    "cwd": "/home/litan/Projects/bfaceswap",
+    "exit_code": 0,
+    "output": "preflight/gpu-identity.log"
+  },
+  "sdk-version": {
+    "argv": [
+      "/home/litan/.local/opt/rocm-10.0.0-gfx120X-all/bin/rocminfo"
+    ],
+    "cwd": "/home/litan/Projects/bfaceswap",
+    "exit_code": 0,
+    "output": "preflight/sdk-version.log"
+  },
+  "packages": {
+    "argv": [
+      "pacman",
+      "-Q"
+    ],
+    "cwd": "/home/litan/Projects/bfaceswap",
+    "exit_code": 0,
+    "output": "preflight/packages.log"
+  },
+  "python": {
+    "argv": [
+      ".venv/bin/python",
+      "--version"
+    ],
+    "cwd": "/home/litan/Projects/bfaceswap",
+    "exit_code": 0,
+    "output": "preflight/python.log"
+  },
+  "python-packages": {
+    "argv": [
+      "uv",
+      "pip",
+      "list"
+    ],
+    "cwd": "/home/litan/Projects/bfaceswap",
+    "exit_code": 0,
+    "output": "preflight/python-packages.log"
+  }
+}

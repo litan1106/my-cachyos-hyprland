@@ -1,0 +1,35 @@
+{
+  "source_revision": "d1be6fde11ac6e0407606b4e42fe72d34add8037",
+  "binary": "/home/litan/Projects/whisper_cpp/build-rocm10/bin/whisper-cli",
+  "sha256": "094a2de38d5acf637a62047838d734c86840d4946318d692d423af525bb47d20",
+  "build_command": [
+    "cmake",
+    "--build",
+    "/home/litan/Projects/whisper_cpp/build-rocm10",
+    "--target",
+    "whisper-cli",
+    "--parallel",
+    "4"
+  ],
+  "build_exit_code": 0,
+  "help_exit_code": 0,
+  "ldd_exit_code": 0,
+  "tag": "v1.9.5",
+  "configure_command": [
+    "cmake",
+    "-S",
+    "/home/litan/Projects/whisper_cpp",
+    "-B",
+    "/home/litan/Projects/whisper_cpp/build-rocm10",
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DGGML_HIP=ON",
+    "-DGPU_TARGETS=gfx1200",
+    "-DCMAKE_HIP_COMPILER=/home/litan/.local/opt/rocm-10.0.0-gfx120X-all/lib/llvm/bin/clang",
+    "-DCMAKE_HIP_COMPILER_ROCM_ROOT=/home/litan/.local/opt/rocm-10.0.0-gfx120X-all",
+    "-DCMAKE_PREFIX_PATH=/home/litan/.local/opt/rocm-10.0.0-gfx120X-all",
+    "-DCMAKE_BUILD_RPATH=/home/litan/.local/opt/rocm-10.0.0-gfx120X-all/lib;/home/litan/.local/opt/rocm-10.0.0-gfx120X-all/lib/llvm/lib"
+  ],
+  "configure_exit_code": 0,
+  "model_status": "missing; user deferred download",
+  "inference_verified": false
+}

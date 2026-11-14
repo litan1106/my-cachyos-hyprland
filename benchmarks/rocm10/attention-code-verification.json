@@ -1,0 +1,31 @@
+{
+  "recorded_at_utc": "2026-11-14T18:06:02.602914+00:00",
+  "scope": "CPU-only code preparation; no GPU timing or backend verification",
+  "checks": [
+    {
+      "command": ".venv/bin/python -m unittest discover -s tests -p 'test_runtime_profiles.py'",
+      "result": "passed",
+      "tests": 5
+    },
+    {
+      "command": ".venv/bin/python -m unittest discover -s tests -p 'test_benchmark.py'",
+      "result": "passed",
+      "tests": 22
+    },
+    {
+      "command": ".venv/bin/python scripts/benchmark-bfs.py --config benchmarks/optimization/user-quality-config.json --suite attention --dry-run",
+      "result": "passed",
+      "cases": [
+        "attention-sdpa",
+        "attention-split",
+        "attention-quad",
+        "attention-ck"
+      ],
+      "inputs_match_frozen_hashes": true
+    }
+  ],
+  "remaining": [
+    "Verify effective attention backends and comfy-kitchen HIP kernel execution on gfx1200 with startup logs and representative traces.",
+    "Apply quality gates before performance comparisons."
+  ]
+}

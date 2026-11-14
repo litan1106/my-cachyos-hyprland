@@ -1,0 +1,1 @@
+d0e4bebaa8b3450c62090df1408f2ee5ccb2094f9c610ffde564a654483d4f37  /home/litan/.cache/huggingface/hub/models--deepreinforce-ai--Ornith-1.0-9B-GGUF/snapshots/3296bc7a404871a72ac3f1903f561459c09b5c17/ornith-1.0-9b-Q8_0.gguf

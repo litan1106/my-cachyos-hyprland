@@ -1,0 +1,10 @@
+{
+  "runner_pid": 16148,
+  "server_pid": 16159,
+  "runner_and_server_start_local": "2026-11-14 10:22:01 PST",
+  "exec_session_id": 44332,
+  "prompt_id": null,
+  "observed_queue_prompt_ids": [
+    "aed1f0ff-1fc5-4d0d-a8d8-4438cb7a0b2d"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "source_revision": "5676dfbe01e7ebe0387913680eee0ed39bf4a363",
+  "binary": "/home/litan/Projects/llama_cpp/build-rocm10/bin/llama-server",
+  "sha256": "684cf8dc4e9a4a442ad180d0044981af14ec4bc29f058fe5b5f9c6b528086301",
+  "build_command": [
+    "cmake",
+    "--build",
+    "/home/litan/Projects/llama_cpp/build-rocm10",
+    "--target",
+    "llama-server",
+    "--parallel",
+    "4"
+  ],
+  "build_exit_code": 0,
+  "help_exit_code": 0,
+  "ldd_exit_code": 0
+}

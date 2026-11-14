@@ -1,0 +1,519 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-07T04:00:29.249127+00:00",
+  "runtime": {
+    "python": "Python 3.12.13",
+    "uv": "uv 0.13.7 (316c827e0 2026-11-03 x86_64-unknown-linux-gnu)",
+    "comfyui_revision": "1332fabfcc507aa7c548cd5152071ed494c207e8",
+    "node_revisions": {
+      "ComfyUI-BFSNodes": "1ebfd0c9b6d40b43ca6c12c05143238fedbfc41e",
+      "ComfyUI-KJNodes": "ab72eda7ffad6280422d71ab7d54d3fb87c0ba18",
+      "ComfyUI-VideoHelperSuite": "4d907bee61e92c2e65af3bd6383a4e4d356126d1",
+      "ComfyUI-GGUF": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a"
+    },
+    "pytorch_index": "https://download.pytorch.org/whl/rocm7.2",
+    "pytorch_version": "2.11.0",
+    "torchvision_version": "0.26.0",
+    "torchaudio_version": "2.11.0",
+    "gpu": "AMD Radeon RX 9060 XT",
+    "gpu_architecture": "gfx1200",
+    "hip_visible_devices": "0",
+    "rocm_path": "/opt/rocm",
+    "torch_installed_version": "2.11.0+rocm7.2",
+    "torchvision_installed_version": "0.26.0+rocm7.2",
+    "torchaudio_installed_version": "2.11.0+rocm7.2",
+    "triton_rocm_installed_version": "3.6.0",
+    "opencv_python_installed_version": "5.0.0.93",
+    "opencv_python_headless_installed_version": "5.0.0.93",
+    "hip_version": "7.2.26015",
+    "gpu_pci_bus": "0000:03:00.0"
+  },
+  "upstream_workflow": {
+    "repository": "Alissonerdx/BFS-Best-Face-Swap-Video",
+    "revision": "d0adb5394c6a1b05f2245ec33cb91051a8000853",
+    "filename": "workflows/workflow_ltx2_head_swap_drag_and_drop_v3.0.json",
+    "url": "https://huggingface.co/Alissonerdx/BFS-Best-Face-Swap-Video/resolve/d0adb5394c6a1b05f2245ec33cb91051a8000853/workflows/workflow_ltx2_head_swap_drag_and_drop_v3.0.json",
+    "destination": "workflows/bfs-v3-upstream.json",
+    "sha256": "fea2ee4d58504262364e5d728f6cb1496572800e705f9cb9404123f22c86352b"
+  },
+  "models_manifest": {
+    "path": "models.json",
+    "sha256": "bcb1ad175e688a8a8b3862c0eebf85c106e8efc7102b362d8d926bddffa269fb"
+  },
+  "verification": {
+    "gpu": "passed; PCI-correlated gfx1200 RX9060XT, finite FP32/BF16 CPU comparison; logs/gpu-check-root.txt",
+    "nodes": "all four pinned packs import and required backend classes register; logs/object-info.json",
+    "models": "All six required size/SHA256 checks pass; isolated components and actual combined sampling/decode pass",
+    "render": "3 successful33frame640x32024fps1.375s jobs;1queued cleanup failure retained separately",
+    "quality": "Not accepted: source mouth expression suppressed, stylized likeness and changed framing; no preferred preset",
+    "dependencies": "uv lock --check, uv sync --locked, uv pip check passed 122 installed packages",
+    "workflow": "Fresh final server strict schema check ready33nodes with zero errors/missing assets; actual frontend parity passed",
+    "artifact_review": "All3 full decode, FFprobe metadata/audio timestamps and browser33frame playback checks pass",
+    "guidance": "All four local skills exercised and corrected against actual setup/input/tuning/review failures",
+    "tests": "9 passed; logs/tool-tests-final.txt"
+  },
+  "lock": {
+    "path": "uv.lock",
+    "sha256": "b9a959346c8bf0513c78f5da05859ef503a9c81e8ae46ca61a0202132446c111"
+  },
+  "packages": {
+    "path": "logs/runtime-packages.json",
+    "sha256": "e16361bceff57c05c80234216d371dbd52a720dc7d5954ec691cd299ff297068"
+  },
+  "launcher": {
+    "path": "run-bfs.sh",
+    "sha256": "92baf98492452d933d9d0e0f4df0061fefb9b58b65570766582b2ed5a9877739"
+  },
+  "server": {
+    "url": "http://127.0.0.1:8189",
+    "pid": 136342,
+    "log": "logs/runtime-server-final.txt",
+    "launch": "./run-bfs.sh",
+    "state": "fresh and idle; restart after evidence retention to release test model caches"
+  },
+  "workflow_adaptation": {
+    "upstream_sha256": "fea2ee4d58504262364e5d728f6cb1496572800e705f9cb9404123f22c86352b",
+    "ui_sha256": "ea4a899e9a9014fbee176e311236faf595862e0804d83ac969ed7d4ccefa6163",
+    "api_sha256": "c030926ee4c04e1fa914a3787ea5771acb53d0f4ffcee6f95c06cff96e0d7036",
+    "backend_nodes": 33,
+    "source_area": [
+      512,
+      320
+    ],
+    "composed_dimensions": [
+      640,
+      320
+    ],
+    "reference_panel": {
+      "position": "left",
+      "width": 128
+    },
+    "geometry_reason": "Upstream composer preserves its input canvas and fits the video into the remaining area. Expand the canvas then restore the source area with core ImageCompositeMasked to preserve exact source geometry.",
+    "frames": 33,
+    "fps": 24,
+    "batch_size": 1,
+    "manual_prompt_requires_edit": true,
+    "schedule": {
+      "sigmas": "1.0, 0.9713438749313354, 0.9294229745864868, 0.8628878593444824, 0.7442997097969055, 0.5, 0.21312162280082703, 0.06964603066444397, 0.0"
+    },
+    "schedule_origin": {
+      "upstream_node": 575,
+      "scheduler": "bong_tangent",
+      "steps": 8,
+      "denoise": 1,
+      "evidence": "logs/schedule-equivalence.json",
+      "step_changes_require_regeneration": true
+    },
+    "sampler": {
+      "sampler_name": "euler_ancestral_cfg_pp"
+    },
+    "lora": "head_swap_v3_rank_adaptive_fro_098.safetensors",
+    "lora_strength": 1.0,
+    "decode": {
+      "samples": [
+        "383",
+        2
+      ],
+      "vae": [
+        "479",
+        0
+      ],
+      "tile_size": 256,
+      "overlap": 64,
+      "temporal_size": 16,
+      "temporal_overlap": 8
+    },
+    "audio": {
+      "requires_source_audio": true,
+      "source_loader_duration_seconds": 1.375,
+      "model_trim_duration_seconds": 1.38,
+      "trim_note": "Frontend widget precision is 0.01 seconds. VHS already bounds source audio to 1.375 seconds, so rounding the secondary trim to 1.38 does not extend the audio."
+    },
+    "frontend_nodes_resolved": [
+      "SetNode",
+      "GetNode",
+      "PrimitiveNode",
+      "bypassed model LoRA nodes"
+    ],
+    "removed_branches": [
+      "Ollama and text-generation captioning",
+      "text encoder modification LoRA",
+      "unused latent upscaler",
+      "disconnected manual schedule",
+      "comparison exports and previews"
+    ],
+    "pending_assets": [],
+    "frontend_export_verified": true,
+    "frontend_export_evidence": "logs/frontend-export-check.json",
+    "model_load_verified": true,
+    "render_verified": false,
+    "guide_verification": {
+      "synthetic": "logs/model-check-geometry.json",
+      "actual": "logs/model-check-guide.json",
+      "actual_guide_encode": "logs/model-check-guide-encode.json",
+      "contact_sheet": "logs/prepared-guide.png",
+      "visual_observation": "Start/middle/end frames inspected: reference portrait visible in the 128 px left panel; prepared source area retained exactly, including existing letterboxing."
+    },
+    "author_extension_revision_unknown": true,
+    "local_scheduler_revision_assumption": "The author workflow names bong_tangent but does not pin its provider extension. The frozen curve is exact for locally selected primary RES4LYF revision 6780724de0ddb98e7454d54bb80387836a911ece; equivalence to the author unpublished plugin environment is unverified.",
+    "model_load_scope": "Isolated execution of the selected adapted loader classes, real text encoding, video VAE encode/tiled decode, audio VAE encode, and transformer+adaptive LoRA GPU load. Full combined graph sampling remains unverified.",
+    "component_probe_reports": {
+      "text": "logs/model-check-text.json",
+      "video-vae": "logs/model-check-video-vae.json",
+      "audio-vae": "logs/model-check-audio-vae.json",
+      "transformer": "logs/model-check-transformer.json",
+      "guide-encode": "logs/model-check-guide-encode.json"
+    },
+    "swap_observation": {
+      "point_observation_after_probes": "System swap use was approximately 2.1 GiB after the component probes, compared with approximately 1.8 MiB observed during early text encoding. Other processes shared the machine; this is an observation, not isolated attribution or a peak measurement.",
+      "whole_graph_memory_fit_verified": false
+    }
+  },
+  "schedule_provenance": {
+    "scheduler": "bong_tangent",
+    "steps": 8,
+    "denoise": 1,
+    "source_url": "https://github.com/ClownsharkBatwing/RES4LYF/blob/6780724de0ddb98e7454d54bb80387836a911ece/sigmas.py",
+    "revision": "6780724de0ddb98e7454d54bb80387836a911ece",
+    "file_sha256": "2eec2693b1c9326de64c4f8160db51fc17906de11a1a5db1b9d3dccd047443a6",
+    "functions_sha256": "b6e7fe645e7e7e22b7b801d3570983f22d8114c63f387a2b2faf0f42136765ec",
+    "sigmas": [
+      1.0,
+      0.9713438749313354,
+      0.9294229745864868,
+      0.8628878593444824,
+      0.7442997097969055,
+      0.5,
+      0.21312162280082703,
+      0.06964603066444397,
+      0.0
+    ],
+    "model_sampling_unused": true,
+    "note": "The upstream V3 active BasicScheduler uses this extension scheduler, absent in pinned core. Freeze its deterministic FP32 values with core ManualSigmas.",
+    "torch_equal": true,
+    "dtype": "torch.float32",
+    "core_loader": "ManualSigmas.execute",
+    "core_source": "ComfyUI/comfy_extras/nodes_custom_sampler.py:1125",
+    "fixed_steps_requires_regeneration": true,
+    "author_extension_revision_unknown": true,
+    "local_scheduler_revision_assumption": "The author workflow names bong_tangent but does not pin its provider extension. The frozen curve is exact for locally selected primary RES4LYF revision 6780724de0ddb98e7454d54bb80387836a911ece; equivalence to the author unpublished plugin environment is unverified."
+  },
+  "sample_inputs": {
+    "preparation": "logs/input-preparation.json",
+    "sha256": "9ed2ce27cced81b04f119755255857047fe7bfc7c216793a67b3985c0f093054",
+    "guide_check": {
+      "stage": "guide",
+      "status": "passed",
+      "synthetic_diagnostic": false,
+      "render_verified": false,
+      "quality_verified": false,
+      "composed": {
+        "shape": [
+          33,
+          320,
+          640,
+          3
+        ],
+        "dtype": "torch.float32",
+        "device": "cpu",
+        "finite": true
+      },
+      "source_area_exact": true,
+      "video_info": {
+        "source_fps": 24.0,
+        "source_frame_count": 33,
+        "source_duration": 1.375,
+        "source_width": 512,
+        "source_height": 320,
+        "loaded_fps": 24.0,
+        "loaded_frame_count": 33,
+        "loaded_duration": 1.375,
+        "loaded_width": 512,
+        "loaded_height": 320
+      },
+      "frame_count": 33,
+      "fps": 24,
+      "contact_sheet": "logs/prepared-guide.png",
+      "input_hashes": {
+        "/home/litan/Projects/bfaceswap/input/source.mp4": "bd9a0436947dfe134eb6267737ae86147e5e8854db506e49e34d2f15400dc8a2",
+        "/home/litan/Projects/bfaceswap/input/reference.png": "7eca776063b1b109e573b78d7a063291910e7d9a4c8c25e55a99d555bf148d61"
+      },
+      "wall_seconds": 1.0452980319969356,
+      "observed_torch_peak_allocated_bytes": 1024
+    }
+  },
+  "component_checks": {
+    "text": {
+      "stage": "text",
+      "status": "passed",
+      "synthetic_diagnostic": true,
+      "render_verified": false,
+      "quality_verified": false,
+      "runtime": {
+        "torch": "2.11.0+rocm7.2",
+        "hip": "7.2.26015",
+        "device": "AMD Radeon Graphics"
+      },
+      "conditioning": {
+        "shape": [
+          1,
+          19,
+          6144
+        ],
+        "dtype": "torch.float32",
+        "device": "cpu",
+        "finite": true
+      },
+      "clip_load_device": "cpu",
+      "clip_offload_device": "cpu",
+      "wall_seconds": 70.60883199799719,
+      "observed_torch_peak_allocated_bytes": 1024,
+      "observed_process_peak_rss_bytes": 17891741696,
+      "memory_methods": {
+        "gpu": "PyTorch max_memory_allocated; excludes non-PyTorch allocations",
+        "host": "Linux getrusage ru_maxrss for this isolated diagnostic process"
+      },
+      "loader_warnings": {
+        "omitted_vision_and_multimodal_keys": 277,
+        "missing_text_layer_keys": 0,
+        "interpretation": "This workflow uses CLIPTextEncode on text only; omitted Gemma vision weights are unused by this diagnostic and graph."
+      }
+    },
+    "transformer": {
+      "stage": "transformer",
+      "status": "passed",
+      "synthetic_diagnostic": true,
+      "render_verified": false,
+      "quality_verified": false,
+      "runtime": {
+        "torch": "2.11.0+rocm7.2",
+        "hip": "7.2.26015",
+        "device": "AMD Radeon Graphics"
+      },
+      "model_type": "LTXAV",
+      "lora_patched_parameters": 4152,
+      "load_device": "cuda:0",
+      "sampling_verified": false,
+      "wall_seconds": 6.671328575001098,
+      "observed_torch_peak_allocated_bytes": 10884905472,
+      "observed_process_peak_rss_bytes": 12471222272,
+      "memory_methods": {
+        "gpu": "PyTorch max_memory_allocated; excludes non-PyTorch allocations",
+        "host": "Linux getrusage ru_maxrss for this isolated diagnostic process"
+      }
+    },
+    "video-vae": {
+      "stage": "video-vae",
+      "status": "passed",
+      "synthetic_diagnostic": true,
+      "render_verified": false,
+      "quality_verified": false,
+      "runtime": {
+        "torch": "2.11.0+rocm7.2",
+        "hip": "7.2.26015",
+        "device": "AMD Radeon Graphics"
+      },
+      "encoded": {
+        "shape": [
+          1,
+          128,
+          2,
+          2,
+          2
+        ],
+        "dtype": "torch.float32",
+        "device": "cpu",
+        "finite": true
+      },
+      "decoded": {
+        "shape": [
+          9,
+          64,
+          64,
+          3
+        ],
+        "dtype": "torch.float32",
+        "device": "cpu",
+        "finite": true
+      },
+      "wall_seconds": 1.6458049069988192,
+      "observed_torch_peak_allocated_bytes": 1565385728,
+      "observed_process_peak_rss_bytes": 4258652160,
+      "memory_methods": {
+        "gpu": "PyTorch max_memory_allocated; excludes non-PyTorch allocations",
+        "host": "Linux getrusage ru_maxrss for this isolated diagnostic process"
+      }
+    },
+    "audio-vae": {
+      "stage": "audio-vae",
+      "status": "passed",
+      "synthetic_diagnostic": true,
+      "render_verified": false,
+      "quality_verified": false,
+      "runtime": {
+        "torch": "2.11.0+rocm7.2",
+        "hip": "7.2.26015",
+        "device": "AMD Radeon Graphics"
+      },
+      "encoded": {
+        "shape": [
+          1,
+          8,
+          24,
+          16
+        ],
+        "dtype": "torch.float32",
+        "device": "cpu",
+        "finite": true
+      },
+      "wall_seconds": 2.477366548999271,
+      "observed_torch_peak_allocated_bytes": 860694016,
+      "observed_process_peak_rss_bytes": 2457595904,
+      "memory_methods": {
+        "gpu": "PyTorch max_memory_allocated; excludes non-PyTorch allocations",
+        "host": "Linux getrusage ru_maxrss for this isolated diagnostic process"
+      }
+    },
+    "guide-encode": {
+      "stage": "guide-encode",
+      "status": "passed",
+      "synthetic_diagnostic": false,
+      "render_verified": false,
+      "quality_verified": false,
+      "runtime": {
+        "torch": "2.11.0+rocm7.2",
+        "hip": "7.2.26015",
+        "device": "AMD Radeon Graphics"
+      },
+      "composed": {
+        "shape": [
+          33,
+          320,
+          640,
+          3
+        ],
+        "dtype": "torch.float32",
+        "device": "cpu",
+        "finite": true
+      },
+      "source_area_exact": true,
+      "video_info": {
+        "source_fps": 24.0,
+        "source_frame_count": 33,
+        "source_duration": 1.375,
+        "source_width": 512,
+        "source_height": 320,
+        "loaded_fps": 24.0,
+        "loaded_frame_count": 33,
+        "loaded_duration": 1.375,
+        "loaded_width": 512,
+        "loaded_height": 320
+      },
+      "frame_count": 33,
+      "fps": 24,
+      "contact_sheet": "logs/prepared-guide.png",
+      "input_hashes": {
+        "/home/litan/Projects/bfaceswap/input/source.mp4": "bd9a0436947dfe134eb6267737ae86147e5e8854db506e49e34d2f15400dc8a2",
+        "/home/litan/Projects/bfaceswap/input/reference.png": "7eca776063b1b109e573b78d7a063291910e7d9a4c8c25e55a99d555bf148d61"
+      },
+      "encoded": {
+        "shape": [
+          1,
+          128,
+          5,
+          10,
+          20
+        ],
+        "dtype": "torch.float32",
+        "device": "cpu",
+        "finite": true
+      },
+      "vae_load_and_encode_seconds": 3.006644798995694,
+      "wall_seconds": 4.13723118800408,
+      "observed_torch_peak_allocated_bytes": 5181699072,
+      "observed_process_peak_rss_bytes": 4670918656,
+      "memory_methods": {
+        "gpu": "PyTorch max_memory_allocated; excludes non-PyTorch allocations",
+        "host": "Linux getrusage ru_maxrss for this isolated diagnostic process"
+      }
+    }
+  },
+  "model_verification": {
+    "timestamp": "2026-11-07T03:38:04Z",
+    "mode": "verify",
+    "selected": [
+      "transformer",
+      "text_encoder",
+      "projection",
+      "video_vae",
+      "audio_vae",
+      "lora_adaptive"
+    ],
+    "failures": []
+  },
+  "pre_render_host": {
+    "available_ram_bytes": 24943448064,
+    "system_swap_used_bytes": 3035664384
+  },
+  "cache_release_observation": {
+    "evidence": "logs/cache-release.json",
+    "result": "/free did not promptly release memory and delayed queued job. Project server restart recovered; no launch flags changed.",
+    "recovered_available_ram_bytes": 27394514944,
+    "recovered_system_swap_used_bytes": 3086856192
+  },
+  "workflows": {
+    "workflows/bfs-v3-rx9060xt-api.json": "c030926ee4c04e1fa914a3787ea5771acb53d0f4ffcee6f95c06cff96e0d7036",
+    "workflows/bfs-v3-rx9060xt.json": "ea4a899e9a9014fbee176e311236faf595862e0804d83ac969ed7d4ccefa6163",
+    "workflows/bfs-v3-sintel-baseline-api.json": "04c630694c3ecd10f0288db22e6be6e870f45cf03a069c77b45d54ac1258d791",
+    "workflows/bfs-v3-sintel-lora08-api.json": "bbb5f66bda121882f03674445c8e516093ee21fc190be70653f03ac437d0244d",
+    "workflows/bfs-v3-sintel-prompt-motion-api.json": "c1ec6c9bb61c0bb57a8502cfab2da2c0aaf72929526504d1a19a83788597fc7d",
+    "workflows/bfs-v3-upstream.json": "fea2ee4d58504262364e5d728f6cb1496572800e705f9cb9404123f22c86352b"
+  },
+  "final_idle_host": {
+    "available_ram_bytes": 25777324032,
+    "system_swap_used_bytes": 2760675328,
+    "server_status": "logs/final-server-memory.txt"
+  },
+  "preferred_preset": null,
+  "tested_baseline": "workflows/bfs-v3-sintel-baseline-api.json",
+  "pending": [
+    "Quality acceptance and representative longer shots",
+    "49/97frames require continuous source beyond current shot cut and preceding quality gate",
+    "Higher resolution/precision and optional models not validated"
+  ],
+  "runs": [
+    {
+      "run_id": "bfs-smoke",
+      "status": "success",
+      "record": "benchmarks/runs/bfs-smoke/result.json",
+      "output": {
+        "path": "/home/litan/Projects/bfaceswap/output/bfs-smoke.mp4",
+        "sha256": "6e7fe4d947f9830defdd3aba3e6d657d07166d2956c8dd1be37c6e52bfb29219"
+      }
+    },
+    {
+      "run_id": "bfs-lora08",
+      "status": "success",
+      "record": "benchmarks/runs/bfs-lora08/result.json",
+      "output": {
+        "path": "/home/litan/Projects/bfaceswap/output/bfs-lora08.mp4",
+        "sha256": "53609c7a75821ffd2aaf0f681c7477aea9aa56e68e3b31c578c1d7bbd205f5f2"
+      }
+    },
+    {
+      "run_id": "bfs-prompt-motion",
+      "status": "error",
+      "record": "benchmarks/runs/bfs-prompt-motion/result.json",
+      "output": null
+    },
+    {
+      "run_id": "bfs-prompt-motion-retry",
+      "status": "success",
+      "record": "benchmarks/runs/bfs-prompt-motion-retry/result.json",
+      "output": {
+        "path": "/home/litan/Projects/bfaceswap/output/bfs-prompt-motion-retry.mp4",
+        "sha256": "760dcee444f72b775a3d9359df3ac97f73cd0cbbb27199a191303363e8c9b0b5"
+      }
+    }
+  ]
+}

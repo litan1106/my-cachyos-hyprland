@@ -1,0 +1,10 @@
+{
+  "legacy": ["--lowvram", "--reserve-vram", "2"],
+  "gpu-text": ["--reserve-vram", "2"],
+  "offload-one": ["--lowvram", "--reserve-vram", "2", "--async-offload", "1"],
+  "offload-disabled": ["--lowvram", "--reserve-vram", "2", "--disable-async-offload"],
+  "no-pinned": ["--lowvram", "--reserve-vram", "2", "--disable-pinned-memory"],
+  "reserve-one": ["--lowvram", "--reserve-vram", "1"],
+  "no-cache": ["--lowvram", "--reserve-vram", "2", "--cache-none"],
+  "triton": ["--lowvram", "--reserve-vram", "2", "--enable-triton-backend"]
+}

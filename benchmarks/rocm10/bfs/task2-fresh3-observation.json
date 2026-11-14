@@ -1,0 +1,9 @@
+{
+  "runner_pid": 17133,
+  "server_pid": 17143,
+  "start_utc": "2026-11-14T18:27:43Z",
+  "exec_session_id": 50693,
+  "observed_queue_prompt_ids": [
+    "d29a14ea-3f5e-48fe-87a5-1d726b0b9678"
+  ]
+}

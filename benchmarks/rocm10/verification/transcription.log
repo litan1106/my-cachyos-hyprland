@@ -1,0 +1,67 @@
+Found 1 file(s) to transcribe.
+---
+Processing: episode.01.wav
+Transcribing → /tmp/tmpmz0lj1eg/episode.01.srt
+Command: /tmp/tmpmz0lj1eg/cli -m /tmp/tmpmz0lj1eg/model -f /tmp/tmpmz0lj1eg/episode.01.wav -l ja -t 4 -osrt -of /tmp/tmpmz0lj1eg/.transcribe-1j_ajbyn/episode.01
+Saved: /tmp/tmpmz0lj1eg/episode.01.srt
+---
+Script finished.
+Found 1 file(s) to transcribe.
+---
+Processing: audio.wav
+Transcribing → /tmp/tmpw6maz7wn/audio.srt
+Command: /tmp/tmpw6maz7wn/cli -m /tmp/tmpw6maz7wn/model -f /tmp/tmpw6maz7wn/audio.wav -l ja -t 4 -osrt -of /tmp/tmpw6maz7wn/.transcribe-512dwayh/audio
+Saved: /tmp/tmpw6maz7wn/audio.srt
+---
+Script finished.
+Found 1 file(s) to transcribe.
+---
+Processing: audio.wav
+Skipping, output already exists: /tmp/tmp0nok30ky/audio.srt
+---
+Script finished.
+Found 1 file(s) to transcribe.
+---
+Processing: audio.wav
+Transcribing → /tmp/tmp9nhlrljq/audio.srt
+Command: /tmp/tmp9nhlrljq/cli -m /tmp/tmp9nhlrljq/model -f /tmp/tmp9nhlrljq/audio.wav -l ja -t 4 -osrt -of /tmp/tmp9nhlrljq/.transcribe-40n3h9vp/audio
+---
+Script finished.
+Found 1 file(s) to transcribe.
+---
+Processing: audio.wav
+Transcribing → /tmp/tmp9nhlrljq/audio.srt
+Command: /tmp/tmp9nhlrljq/cli -m /tmp/tmp9nhlrljq/model -f /tmp/tmp9nhlrljq/audio.wav -l ja -t 4 -osrt -of /tmp/tmp9nhlrljq/.transcribe-wm6dm351/audio
+---
+Script finished.
+Found 1 file(s) to transcribe.
+---
+Processing: audio.wav
+Transcribing → /tmp/tmpsjwqkfa6/audio.srt
+Command: /tmp/tmpsjwqkfa6/cli -m /tmp/tmpsjwqkfa6/model -f /tmp/tmpsjwqkfa6/audio.wav -l ja -t 4 -osrt -of /tmp/tmpsjwqkfa6/.transcribe-lfvtcrhy/audio
+---
+Script finished.
+Found 1 file(s) to transcribe.
+---
+Processing: audio.wav
+---
+Script finished.
+...Error: whisper-cli exited with code 2 for audio.wav.
+Error: Missing or invalid SRT from whisper-cli for audio.wav
+.Error: whisper-cli exited with code 1 for audio.wav.
+Error: Existing SRT is invalid: /tmp/tmpsjwqkfa6/audio.srt; choose a new output directory
+..Error: whisper-cli is missing or not executable: /tmp/tmp_nvzeudv/cli
+Error: model not found: /tmp/tmp_nvzeudv/model
+.usage: transcribe.py [-h] -i INPUT_PATH [-m MODEL] [-l LANGUAGE]
+                     [-o OUTPUT_DIRECTORY] [-w WHISPER_CLI] [-t THREADS]
+                     [--flash-flag FLASH_FLAG]
+transcribe.py: error: --threads must be positive
+usage: transcribe.py [-h] -i INPUT_PATH [-m MODEL] [-l LANGUAGE]
+                     [-o OUTPUT_DIRECTORY] [-w WHISPER_CLI] [-t THREADS]
+                     [--flash-flag FLASH_FLAG]
+transcribe.py: error: --flash-flag must be a flash-attention toggle
+.
+----------------------------------------------------------------------
+Ran 8 tests in 0.005s
+
+OK

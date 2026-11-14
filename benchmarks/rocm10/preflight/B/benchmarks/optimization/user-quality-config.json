@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "inputs": {
+    "video": {
+      "path": "input/source.mp4",
+      "sha256": "bd9a0436947dfe134eb6267737ae86147e5e8854db506e49e34d2f15400dc8a2"
+    },
+    "reference": {
+      "path": "input/514100_v9_aa.jpg",
+      "sha256": "1cbf6abf796e2bb8434442f3b0891f92e71111bb9671d3ae962af3926f2410e5"
+    }
+  },
+  "workflow": {
+    "path": "workflows/optimization/bfs-v3-user-quality-api.json",
+    "sha256": "c20b58b25f18959f19dea4970e946d38bc5320e9ed186551168a28b139e3599a"
+  },
+  "upstream": {
+    "path": "workflows/bfs-v3-upstream.json",
+    "sha256": "fea2ee4d58504262364e5d728f6cb1496572800e705f9cb9404123f22c86352b"
+  },
+  "frozen_settings": {
+    "frames": 33,
+    "fps": 24,
+    "seed": 1035625245488400,
+    "source_dimensions": [
+      512,
+      320
+    ],
+    "composed_dimensions": [
+      640,
+      320
+    ],
+    "lora_strength": 1.0,
+    "sampling_steps": 8,
+    "prompt_provenance": "Literal prompt in the SHA-256-pinned baseline workflow; no generated caption"
+  },
+  "cases": {
+    "baseline": {
+      "profile": "legacy",
+      "changed_factor": "none"
+    },
+    "gpu-text": {
+      "profile": "gpu-text",
+      "changed_factor": "remove lowvram; retain legacy memory manager"
+    },
+    "offload-one": {
+      "profile": "offload-one",
+      "changed_factor": "one async weight offload stream"
+    },
+    "offload-disabled": {
+      "profile": "offload-disabled",
+      "changed_factor": "disable async weight offloading"
+    },
+    "no-pinned": {
+      "profile": "no-pinned",
+      "changed_factor": "disable pinned host memory"
+    },
+    "reserve-one": {
+      "profile": "reserve-one",
+      "changed_factor": "one GB VRAM reservation"
+    },
+    "no-cache": {
+      "profile": "no-cache",
+      "changed_factor": "disable node result cache"
+    },
+    "triton": {
+      "profile": "triton",
+      "changed_factor": "enable comfy-kitchen Triton backend"
+    },
+    "compile": {
+      "profile": "legacy",
+      "changed_factor": "TorchCompileModel inductor wrapper after BFS LoRA"
+    },
+    "native-fp8": {
+      "profile": "gpu-text",
+      "requires_model": "transformer_fp8",
+      "changed_factor": "Native FP8 transformer only, compared with the GPU-text Q3 case on the same selected user inputs"
+    }
+  },
+  "suites": {
+    "baseline": [
+      "baseline"
+    ],
+    "memory": [
+      "baseline",
+      "gpu-text",
+      "offload-one",
+      "offload-disabled",
+      "no-pinned",
+      "reserve-one",
+      "no-cache"
+    ],
+    "kernels": [
+      "baseline",
+      "triton",
+      "compile"
+    ],
+    "formats": [
+      "baseline",
+      "native-fp8"
+    ]
+  },
+  "blocked_suites": {
+    "formats": "Native scaled FP8 candidate requires the explicit optional transformer_fp8 artifact to pass size/SHA-256 verification before benchmarking. Larger-than-VRAM offloading, model loading and quality remain unverified until measured."
+  },
+  "comparison_scope": "User-selected reference portrait and 33-frame Sintel source; quality acceptance requires frame/playback review."
+}

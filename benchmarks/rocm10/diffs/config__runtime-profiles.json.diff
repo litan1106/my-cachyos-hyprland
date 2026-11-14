@@ -1,0 +1,13 @@
+--- preflight/config/runtime-profiles.json
++++ current/config/runtime-profiles.json
+@@ -6,5 +6,9 @@
+   "no-pinned": ["--lowvram", "--reserve-vram", "2", "--disable-pinned-memory"],
+   "reserve-one": ["--lowvram", "--reserve-vram", "1"],
+   "no-cache": ["--lowvram", "--reserve-vram", "2", "--cache-none"],
+-  "triton": ["--lowvram", "--reserve-vram", "2", "--enable-triton-backend"]
++  "triton": ["--lowvram", "--reserve-vram", "2", "--enable-triton-backend"],
++  "attention-sdpa": ["--lowvram", "--reserve-vram", "2", "--disable-xformers", "--use-pytorch-cross-attention"],
++  "attention-split": ["--lowvram", "--reserve-vram", "2", "--disable-xformers", "--use-split-cross-attention"],
++  "attention-quad": ["--lowvram", "--reserve-vram", "2", "--disable-xformers", "--use-quad-cross-attention"],
++  "attention-ck": ["--lowvram", "--reserve-vram", "2", "--disable-xformers", "--use-ck-attention"]
+ }

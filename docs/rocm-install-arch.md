@@ -117,6 +117,21 @@ The fixed `llama-bench -p 128 -n 32 -r 3 -ngl 999 -o json` workload ran in fresh
 
 ---
 
+## Workload optimization execution (2026-11-14)
+
+The [workload execution record](rocm10-workload-optimization.md) contains the
+frozen environment, raw benchmark references, code verification, and pending
+gates. The native `llama-server` and pinned whisper.cpp v1.9.5 HIP executable now
+build and resolve the selected SDK libraries. Whisper and Qwen model downloads
+were deferred, so real subtitle inference is not validated by those builds.
+
+BFS produced two valid fresh measurements, then encountered an SDMA0 GPU fault;
+two other attempts exited 143 for an unknown reason. A post-fault finite-kernel
+check passed, but repeated render stability is unresolved. Matched attention
+profiles are available for opt-in experiments; the production `legacy` default
+is unchanged. Do not treat the historical results above as evidence for these
+new candidates.
+
 ## Historical: CTranslate2 with ROCm 7.2 on CachyOS
 
 Date: June 2026. The following is historical, not a ROCm 10 verification.

@@ -1,0 +1,54 @@
+{
+  "status": "dry_run",
+  "suite": "attention",
+  "cases": [
+    "attention-sdpa",
+    "attention-split",
+    "attention-quad",
+    "attention-ck"
+  ],
+  "repeats": 1,
+  "inputs": {
+    "video": {
+      "path": "/home/litan/Projects/bfaceswap/input/source.mp4",
+      "sha256": "bd9a0436947dfe134eb6267737ae86147e5e8854db506e49e34d2f15400dc8a2",
+      "matches_frozen_input": true
+    },
+    "reference": {
+      "path": "/home/litan/Projects/bfaceswap/input/514100_v9_aa.jpg",
+      "sha256": "1cbf6abf796e2bb8434442f3b0891f92e71111bb9671d3ae962af3926f2410e5",
+      "matches_frozen_input": true
+    }
+  },
+  "workflow": {
+    "path": "workflows/optimization/bfs-v3-user-quality-api.json",
+    "sha256": "c20b58b25f18959f19dea4970e946d38bc5320e9ed186551168a28b139e3599a"
+  },
+  "benchmark_frames": 33,
+  "fps": 24,
+  "trace": false,
+  "session": "fresh",
+  "warmup_runs_excluded": 0,
+  "commands": {
+    "attention-sdpa": [
+      "/home/litan/Projects/bfaceswap/run-bfs.sh",
+      "--profile",
+      "attention-sdpa"
+    ],
+    "attention-split": [
+      "/home/litan/Projects/bfaceswap/run-bfs.sh",
+      "--profile",
+      "attention-split"
+    ],
+    "attention-quad": [
+      "/home/litan/Projects/bfaceswap/run-bfs.sh",
+      "--profile",
+      "attention-quad"
+    ],
+    "attention-ck": [
+      "/home/litan/Projects/bfaceswap/run-bfs.sh",
+      "--profile",
+      "attention-ck"
+    ]
+  }
+}

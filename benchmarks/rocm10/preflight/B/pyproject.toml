@@ -1,0 +1,79 @@
+[project]
+name = "bfs-rocm-runtime"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "PyOpenGL>=3.1.8",
+    "amd-torch-device-gfx12-0==2.13.0+rocm10.0.0",
+    "amd-torch-device-gfx1200==2.13.0+rocm10.0.0",
+    "amd-torchvision-device-gfx1200==0.28.0+rocm10.0.0",
+    "rocm==10.0.0",
+    "rocm-bootstrap",
+    "rocm-sdk-core==10.0.0",
+    "rocm-sdk-device-gfx1200==10.0.0",
+    "rocm-sdk-libraries==10.0.0",
+    "triton==3.8.0+git4cff872c.rocm10.0.0",
+    "SQLAlchemy>=2.0.0",
+    "aiohttp>=3.11.8",
+    "alembic",
+    "av>=17.0.0",
+    "blake3",
+    "color-matcher",
+    "comfy-aimdo==0.6.0",
+    "comfy-angle",
+    "comfy-kitchen==0.2.41",
+    "comfyui-embedded-docs==0.5.16",
+    "comfyui-frontend-package==1.58.5",
+    "comfyui-workflow-templates==0.11.103",
+    "einops",
+    "filelock",
+    "gguf>=0.13.0",
+    "imageio-ffmpeg",
+    "kornia>=0.7.1",
+    "librosa",
+    "matplotlib",
+    "mss",
+    "numpy>=1.25.0",
+    "opencv-python",
+    "opencv-python-headless",
+    "pillow>=10.3.0",
+    "protobuf",
+    "psutil",
+    "pydantic-settings~=2.0",
+    "pydantic~=2.0",
+    "pyyaml",
+    "requests",
+    "safetensors>=0.4.2",
+    "scenedetect",
+    "scipy",
+    "sentencepiece",
+    "simpleeval>=1.0.0",
+    "spandrel",
+    "tokenizers>=0.13.3",
+    "torch[device-gfx1200]==2.13.0+rocm10.0.0",
+    "torchaudio==2.11.0.2+rocm10.0.0",
+    "torchsde",
+    "torchvision[device-gfx1200]==0.28.0+rocm10.0.0",
+    "tqdm",
+    "transformers>=4.55.0",
+    "yarl>=1.18.0",
+]
+
+[[tool.uv.index]]
+name = "amd-rocm"
+url = "https://stable.repo.amd.com/rocm/whl-next/"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "amd-rocm" }
+torchvision = { index = "amd-rocm" }
+torchaudio = { index = "amd-rocm" }
+triton = { index = "amd-rocm" }
+amd-torch-device-gfx1200 = { index = "amd-rocm" }
+amd-torch-device-gfx12-0 = { index = "amd-rocm" }
+amd-torchvision-device-gfx1200 = { index = "amd-rocm" }
+rocm = { index = "amd-rocm" }
+rocm-bootstrap = { index = "amd-rocm" }
+rocm-sdk-core = { index = "amd-rocm" }
+rocm-sdk-libraries = { index = "amd-rocm" }
+rocm-sdk-device-gfx1200 = { index = "amd-rocm" }
