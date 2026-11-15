@@ -44,7 +44,8 @@
     "gpu_fp32_bf16": "passed: finite and matches CPU reference",
     "pytorch_linkage": "matching virtualenv _rocm_sdk_libraries loaded",
     "native_linkage": "llama-bench resolves native SDK libraries; see log",
-    "bfs_required_models": "passed: six required models verified; preflight/bfs-model-check.log"
+    "bfs_required_models": "passed: six required models verified; preflight/bfs-model-check.log",
+    "affected_cpu_tests": "59 passed: 5 runtime-profile, 22 BFS benchmark, 8 transcription, 24 translation; verification/checks.json"
   },
   "models": {
     "llama_benchmark": {
@@ -71,14 +72,35 @@
     "bfs": "preflight/B/models.json"
   },
   "pending_gates": [
-    "Translation and Whisper measurements await their selected models; no downloads approved.",
-    "BFS and llama measurements remain separate from preflight and require their own recorded experiment evidence."
+    "BFS repeated stability: two fresh successes, one original exit143, one GPU fault, offload-disabled exit143; no full baseline/warm/trace/playback or preferred candidate.",
+    "Remaining native microbatch/KV comparisons, completion probe and server smoke.",
+    "User-deferred Whisper/Qwen models, actual subtitle inference, repetitions and transcript/translation quality.",
+    "Combined presets and final quality/performance acceptance; defaults unchanged."
   ],
   "user_decisions": {
-    "model_downloads": "Deferred by user; code preparation allowed, real transcription/translation measurements pending"
+    "model_downloads": "Deferred by user; code preparation allowed, real transcription/translation measurements pending",
+    "model_storage_advice": "Suggested permanent ~/Models with pinned revisions/hashes and individual framework symlinks, all Qwen shards together. Advice only; no migration or download authorized/performed."
   },
   "native_builds": {
     "whisper": "native-builds/whisper.json",
     "llama_server": "native-builds/llama.json"
+  },
+  "execution": {
+    "status": "paused_by_user",
+    "paused_at_utc": "2026-11-14T18:48:20.734694+00:00",
+    "checkpoint": "RESUME.md",
+    "reason": "User requested stopping at a good point to resume tomorrow. Current flash invocation finished; no new run scheduled.",
+    "owned_processes": "none; final verification in verification/checkpoint.json"
+  },
+  "experiments": {
+    "bfs": "bfs/task2-summary.json",
+    "bfs_gpu_fault": "bfs/fault-diagnosis.json",
+    "bfs_termination": "bfs/termination-diagnosis.json",
+    "bfs_offload_diagnostic": "bfs/offload-disabled-diagnostic.json",
+    "llama": [
+      "llama/20261114T183346.266769Z-baseline/run.json",
+      "llama/20261114T183419.444391Z-translation/run.json",
+      "llama/20261114T184107.820222Z-flash/run.json"
+    ]
   }
 }

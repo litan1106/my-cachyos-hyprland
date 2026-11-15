@@ -1,0 +1,11 @@
+--- preflight/README.md
++++ current/README.md
+@@ -1,4 +1,8 @@
+ # BFS on RX 9060 XT
++
++The [ROCm 10 execution record](../my-cachyos-hyprland/docs/rocm10-workload-optimization.md) tracks the 2026-11-14 environment, measurements, failures, and pending quality gates. Two fresh runs passed artifact checks; a later baseline hit an SDMA0 GPU fault, and two attempts were interrupted with exit 143. Repeated stability is unresolved. The default remains `legacy`.
++
++Opt-in matched profiles `attention-sdpa`, `attention-split`, `attention-quad`, and `attention-ck` retain legacy memory settings and disable xformers. The launcher selects one attention flag and rejects conflicts. Preview their commands with `.venv/bin/python scripts/benchmark-bfs.py --config benchmarks/optimization/user-quality-config.json --suite attention --dry-run`. Their effective GPU kernels and performance are unverified; no attention profile is preferred.
+ 
+ For step-by-step browser use and the portrait/1080p workflow plan, read the [user guide](USER_GUIDE.md). For likeness, motion, and integration adjustments, read the [tuning guide](TUNING_GUIDE.md).
+ 

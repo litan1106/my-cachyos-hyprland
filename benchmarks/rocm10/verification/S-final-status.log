@@ -1,0 +1,11 @@
+ M AGENTS.md
+ D pi-hole-jv.sh
+ D pi-hole-jv2.sh
+ D pihole-docker.sh
+ M transcribe.py
+ M translate_srt.py
+?? .gitignore
+?? benchmarks/
+?? pihole/
+?? scripts/
+?? tests/

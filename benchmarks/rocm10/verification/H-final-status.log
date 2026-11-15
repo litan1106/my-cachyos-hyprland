@@ -1,0 +1,8 @@
+ M benchmarks/rocm10/manifest.json
+ M docs/rocm10-workload-optimization.md
+ M docs/superpowers/plans/2026-11-12-rocm10-workload-optimization.md
+ M docs/superpowers/plans/2026-11-12-rocm10-workload-optimization.md.tasks.json
+?? benchmarks/rocm10/RESUME.md
+?? benchmarks/rocm10/llama/20261114T184107.820222Z-flash/after-ps.txt
+?? benchmarks/rocm10/llama/20261114T184107.820222Z-flash/after.json
+?? benchmarks/rocm10/verification/H-final-diff-check.log

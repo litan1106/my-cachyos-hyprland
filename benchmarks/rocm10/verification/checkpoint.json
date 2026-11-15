@@ -1,0 +1,41 @@
+{
+  "utc": "2026-11-14T18:48:51.675288+00:00",
+  "checks": {
+    "H_diff_check": {
+      "exit_code": 0
+    },
+    "H_staged_files": [],
+    "S_diff_check": {
+      "exit_code": 0
+    },
+    "S_staged_files": [],
+    "B_original_backup_hashes": "all match",
+    "B_added_trailing_whitespace": "none; final diffs retained",
+    "port_8189": "free",
+    "port_8190": "free",
+    "remaining_workload_processes": [],
+    "native_results": [
+      {
+        "run": "llama/20261114T183346.266769Z-baseline/run.json",
+        "status": "passed",
+        "rows": 2,
+        "wall_seconds": 5.671733033999772
+      },
+      {
+        "run": "llama/20261114T183419.444391Z-translation/run.json",
+        "status": "passed",
+        "rows": 2,
+        "wall_seconds": 103.53916379399925
+      },
+      {
+        "run": "llama/20261114T184107.820222Z-flash/run.json",
+        "status": "passed",
+        "rows": 6,
+        "wall_seconds": 313.819824313
+      }
+    ],
+    "L_source_status": [],
+    "W_source_status": []
+  },
+  "status": "passed; paused_by_user"
+}

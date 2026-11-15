@@ -138,7 +138,20 @@ python3 benchmarks/rocm10/llama/run.py completion
 python3 benchmarks/rocm10/llama/run.py server
 ```
 
-Remaining tuning, deterministic completion, and server smoke gates are pending.
+The [flash comparison](../benchmarks/rocm10/llama/20261114T184107.820222Z-flash/run.json)
+completed all six expected rows, three repetitions each, in 313.820 seconds:
+
+| Flash setting | Prompt 2048 tokens/s | Combined prompt 2048 + generation 1024 tokens/s |
+| --- | ---: | ---: |
+| off | 2507.003 | 90.189 |
+| on | 2654.000 | 93.307 |
+| auto | 2648.648 | 93.218 |
+
+On and auto are close in this invocation. These observations are restricted to
+Ornith and this workload; no subtitle-model or general preset preference is
+established. Raw repetition samples and standard deviations remain in its JSON.
+
+Microbatch/KV tuning, deterministic completion, and server smoke gates are pending.
 No GPU workload, compilation, or download may overlap a timed comparison.
 
 ## Whisper and subtitles
@@ -188,6 +201,11 @@ work. Hugging Face's [shared cache design](https://huggingface.co/docs/huggingfa
 also uses revision snapshots linked to shared contents.
 
 ## Completion gates and rollback
+
+Execution paused at the user's request on 2026-11-14 after the flash comparison
+finished. No experiment-owned process remains and ports 8189/8190 are free. The
+[resume checkpoint](../benchmarks/rocm10/RESUME.md) contains the next commands and
+the [termination diagnosis](../benchmarks/rocm10/bfs/termination-diagnosis.json).
 
 Task 1's environment freeze passed. Other task states remain tied to their
 required execution, artifact, quality, and repeated-performance gates in the

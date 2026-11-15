@@ -2,7 +2,7 @@
 
 Date: 2026-11-12 (revised 2026-11-14 after verifying it against the machine)
 
-Status: In progress. Preflight passed; code and native build preparation started on 2026-11-14. The user deferred Qwen and Whisper model downloads, so their measurements remain pending. Execution evidence: `../../../benchmarks/rocm10/manifest.json`.
+Status: Paused at the user's request on 2026-11-14 after the native flash comparison completed. Task 1 passed; other tasks retain unresolved execution/quality gates. Resume from `../../../benchmarks/rocm10/RESUME.md`. Both model downloads remain deferred.
 
 ## Objective
 

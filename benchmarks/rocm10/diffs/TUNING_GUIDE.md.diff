@@ -1,0 +1,13 @@
+--- preflight/TUNING_GUIDE.md
++++ current/TUNING_GUIDE.md
+@@ -1,6 +1,10 @@
+ # BFS tuning guide: improve likeness, motion, and face integration
+ 
+ Use this with the [step-by-step user guide](USER_GUIDE.md). It applies to the installed **V3 / LTX-2.3** workflow on the RX 9060 XT.
++
++The [2026-11-14 ROCm 10 execution record](../my-cachyos-hyprland/docs/rocm10-workload-optimization.md) retains measured results and failures. Fresh-process text encoding dominated the first measured run; this does not establish a faster candidate. A subsequent SDMA0 fault and unexplained exit-143 interruptions leave repeated baseline stability unresolved. Attention, memory, Triton, and compilation experiments require their own execution, artifact, and quality gates. Keep `./run-bfs.sh --profile legacy` as the unchanged production selection.
++
++Frame inspection of the selected portrait/Sintel baseline found recognizable identity and no guide panel, but reduced source mouth opening and stylized facial proportions. These observations apply to that clip and do not establish accepted expression or temporal quality. Do not select a quality preset from timing alone.
+ 
+ The practical order is: **reference and source quality → prompt cleanup → small LoRA comparisons → working resolution → duration → final export**. Work on the visible defect before spending more memory on a bigger render.
+ 
