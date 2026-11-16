@@ -104,7 +104,7 @@ const j = async (path, params) => {
 
 const $ = (s)=>document.querySelector(s);
 const grid = $("#grid"), status = $("#status");
-let curSid=null, curTitle="", curEps=[];
+let curSid=null, curTitle="", curEps=[], curEpPos=-1;
 
 function fmtPlays(n){ n=+n||0; if(n>=1e8)return (n/1e8).toFixed(1)+"亿";
   if(n>=1e4)return (n/1e4).toFixed(1)+"万"; return ""+n; }
@@ -145,7 +145,7 @@ async function doSearch(q){
 }
 
 async function openSeries(sid, title){
-  curSid=sid; curTitle=title||""; curEps=[];
+  curSid=sid; curTitle=title||""; curEps=[]; curEpPos=-1;
   $("#pt").textContent=curTitle; $("#epbar").innerHTML='<span class="status">加载选集…</span>';
   $("#video").removeAttribute("src"); $("#video").load();
   $("#overlay").classList.add("show");
@@ -163,8 +163,11 @@ async function openSeries(sid, title){
 }
 
 function playEp(idx){
+  const pos=curEps.findIndex(e=>e.index===idx);
+  if(pos<0) return;
+  curEpPos=pos;
   for(const b of $("#epbar").children) b.classList.toggle("on", b.textContent==""+idx);
-  const ep=curEps.find(e=>e.index===idx);
+  const ep=curEps[pos];
   $("#pt").textContent=curTitle+(ep&&ep.title?(" · 第"+idx+"集"):"");
   const v=$("#video");
   v.src=api("/stream",{series_id:curSid, ep:idx});
@@ -172,7 +175,14 @@ function playEp(idx){
 }
 
 function closePlayer(){ const v=$("#video"); v.pause(); v.removeAttribute("src"); v.load();
+  curEpPos=-1;
   $("#overlay").classList.remove("show"); }
+
+$("#video").addEventListener("ended", ()=>{
+  if(!$("#overlay").classList.contains("show") || curEpPos<0) return;
+  const next=curEps[curEpPos+1];
+  if(next) playEp(next.index);
+});
 
 $("#nav").addEventListener("click", e=>{
   const b=e.target.closest("button[data-feed]"); if(!b)return;
