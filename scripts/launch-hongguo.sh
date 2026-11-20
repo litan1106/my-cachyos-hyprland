@@ -55,6 +55,13 @@ EOF
   esac
 done
 
+mkdir -p "$HG_HOME"
+exec 9>"$HG_HOME/.maintenance.lock"
+if ! flock --shared --nonblock 9; then
+  echo "Hongguo is being upgraded. Try launching it again when the upgrade finishes." >&2
+  exit 1
+fi
+
 # --- Locate the extracted backend ----------------------------------------------
 backend_dir="$(find_backend_dir)"
 if [[ -z $backend_dir ]]; then

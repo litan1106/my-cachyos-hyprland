@@ -22,6 +22,27 @@ script_dir="$(dirname "$(realpath "$0")")"
 source "$script_dir/setup-local-bin-path.sh"
 source "$script_dir/hongguo-common.sh"
 
+if [[ $# -eq 1 && $1 == --launcher-only ]]; then
+  if [[ ! -f "$HG_BACKEND/server.py" ]]; then
+    echo "Hongguo is not installed. Run this script without --launcher-only first." >&2
+    exit 1
+  fi
+  exec 9>"$HG_HOME/.maintenance.lock"
+  if ! flock --exclusive --nonblock 9; then
+    echo "Close Hongguo and wait for any upgrade to finish before refreshing its launcher." >&2
+    exit 1
+  fi
+  install_hongguo_launcher "$script_dir"
+  setup_local_bin_path
+  echo "Hongguo launcher refreshed. Open your app launcher and search for Hongguo."
+  exit 0
+elif [[ $# -gt 0 ]]; then
+  echo "Usage: install-hongguo.sh [--launcher-only]"
+  echo "  --launcher-only  Refresh the installed launcher and desktop entry without reinstalling the backend."
+  [[ $# -eq 1 && ( $1 == --help || $1 == -h ) ]] && exit 0
+  exit 1
+fi
+
 # Pinned installer. Override with HONGGUO_INSTALLER_URL=... to use a newer build.
 INSTALLER_URL="${HONGGUO_INSTALLER_URL:-https://github.com/waligoraamodio288-rgb/hongguo-desktop-releases/releases/download/v1.0.12/hongguo-1.0.12-windows-x86_64-setup.exe}"
 
@@ -83,22 +104,7 @@ echo "Backend installed to $HG_BACKEND ($(du -sh "$HG_BACKEND" | cut -f1))."
 # set into a lib dir under $HG_HOME, then symlink the launcher onto PATH -- it
 # resolves its real directory via `realpath "$0"`, so the symlink still finds the
 # helpers beside the target.
-launcher_dir="$HG_HOME/launcher"
-mkdir -p "$launcher_dir/hongguo-web"
-install -Dm755 "$script_dir/launch-hongguo.sh"                "$launcher_dir/launch-hongguo"
-install -Dm644 "$script_dir/hongguo-common.sh"               "$launcher_dir/hongguo-common.sh"
-install -Dm644 "$script_dir/hongguo-web/standalone_server.py" "$launcher_dir/hongguo-web/standalone_server.py"
-install -Dm644 "$script_dir/hongguo-web/index.html"          "$launcher_dir/hongguo-web/index.html"
-mkdir -p "$HOME/.local/bin"
-ln -sf "$launcher_dir/launch-hongguo" "$HOME/.local/bin/launch-hongguo"
-
-install -Dm644 "$script_dir/../applications/hongguo.desktop" \
-  "$HOME/.local/share/applications/hongguo.desktop"
-# Pin Exec to the launcher symlink so the menu entry works regardless of whether
-# ~/.local/bin is on PATH (it isn't on a default CachyOS session).
-sed -i "s|^Exec=.*|Exec=$HOME/.local/bin/launch-hongguo|" \
-  "$HOME/.local/share/applications/hongguo.desktop"
-update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+install_hongguo_launcher "$script_dir"
 
 # Make sure ~/.local/bin is on PATH so the `launch-hongguo` command resolves
 # (CachyOS doesn't add it by default). The app-menu entry works regardless via
@@ -124,8 +130,13 @@ Hongguo is installed (natively — no Wine). Find it in your app launcher, or ru
 
 The first launch installs the backend's Python deps into a venv using your
 system Python (one-time); later runs start in about a second. The UI opens in a
-native browser (the Windows WebView2 UI is not used). To update later, delete the
-cached installer and re-run this script with a newer \$HONGGUO_INSTALLER_URL.
+native browser (the Windows WebView2 UI is not used). To update later:
+
+  upgrade-hongguo --check
+  upgrade-hongguo
+
+Close Hongguo before upgrading. Use upgrade-hongguo --rollback to restore the
+previous backend if needed; your data and Python environment are preserved.
 
 (Re-login once so the app launcher and new terminals see ~/.local/bin.)
 

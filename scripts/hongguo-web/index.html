@@ -49,6 +49,8 @@
   .phead .x { background:var(--card2); border:1px solid var(--line); color:var(--fg); border-radius:8px;
               width:34px; height:34px; cursor:pointer; font-size:18px; }
   video { width:100%; max-height:62vh; background:#000; display:block; }
+  .player-status { padding:8px 14px; color:var(--mut); }
+  .player-status:empty { display:none; }
   .epbar { padding:10px 14px; display:flex; gap:7px; flex-wrap:wrap; overflow-y:auto; max-height:22vh; }
   .epbar button { background:var(--card2); border:1px solid var(--line); color:var(--fg);
                   min-width:46px; padding:7px 10px; border-radius:8px; cursor:pointer; font-size:13px; }
@@ -83,6 +85,7 @@
       <button class="x" id="closeBtn" title="关闭">×</button>
     </div>
     <video id="video" controls autoplay playsinline></video>
+    <div id="playerStatus" class="player-status" role="status"></div>
     <div class="epbar" id="epbar"></div>
   </div>
 </div>
@@ -104,7 +107,8 @@ const j = async (path, params) => {
 
 const $ = (s)=>document.querySelector(s);
 const grid = $("#grid"), status = $("#status");
-let curSid=null, curTitle="", curEps=[], curEpPos=-1;
+let curSid=null, curTitle="", curEps=[], curEpPos=-1, playGeneration=0;
+const playerStatus = $("#playerStatus");
 
 function fmtPlays(n){ n=+n||0; if(n>=1e8)return (n/1e8).toFixed(1)+"亿";
   if(n>=1e4)return (n/1e4).toFixed(1)+"万"; return ""+n; }
@@ -145,6 +149,7 @@ async function doSearch(q){
 }
 
 async function openSeries(sid, title){
+  playGeneration++; playerStatus.textContent="";
   curSid=sid; curTitle=title||""; curEps=[]; curEpPos=-1;
   $("#pt").textContent=curTitle; $("#epbar").innerHTML='<span class="status">加载选集…</span>';
   $("#video").removeAttribute("src"); $("#video").load();
@@ -169,14 +174,31 @@ function playEp(idx){
   for(const b of $("#epbar").children) b.classList.toggle("on", b.textContent==""+idx);
   const ep=curEps[pos];
   $("#pt").textContent=curTitle+(ep&&ep.title?(" · 第"+idx+"集"):"");
-  const v=$("#video");
+  const v=$("#video"), generation=++playGeneration;
+  playerStatus.textContent="加载中…";
   v.src=api("/stream",{series_id:curSid, ep:idx});
-  v.play().catch(()=>{});
+  v.play().catch(e=>{
+    if(generation!==playGeneration || e.name==="AbortError") return;
+    if(e.name==="NotAllowedError") playerStatus.textContent="请点击播放按钮开始播放";
+  });
 }
 
-function closePlayer(){ const v=$("#video"); v.pause(); v.removeAttribute("src"); v.load();
+function closePlayer(){ playGeneration++; playerStatus.textContent=""; const v=$("#video"); v.pause(); v.removeAttribute("src"); v.load();
   curEpPos=-1;
   $("#overlay").classList.remove("show"); }
+
+$("#video").addEventListener("playing", ()=>{ playerStatus.textContent=""; });
+$("#video").addEventListener("error", async ()=>{
+  const v=$("#video"), generation=playGeneration, url=v.src;
+  if(!url || !$("#overlay").classList.contains("show")) return;
+  let message="播放失败，请稍后重试";
+  try{
+    const r=await fetch(url,{headers:{Range:"bytes=0-0"}});
+    if(r.ok) { if(r.body) await r.body.cancel(); }
+    else { const d=await r.json(); if(d.detail) message="播放失败："+d.detail; }
+  }catch(e){}
+  if(generation===playGeneration) playerStatus.textContent=message;
+});
 
 $("#video").addEventListener("ended", ()=>{
   if(!$("#overlay").classList.contains("show") || curEpPos<0) return;

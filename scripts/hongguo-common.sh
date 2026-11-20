@@ -20,3 +20,28 @@ HG_VENV="$HG_HOME/venv"            # native Python 3.11 venv
 find_backend_dir() {
   [[ -f "$HG_BACKEND/server.py" ]] && printf '%s' "$HG_BACKEND"
 }
+
+install_hongguo_launcher() {
+  local source_dir="$1" launcher_dir="$HG_HOME/launcher"
+  install -Dm755 "$source_dir/launch-hongguo.sh" "$launcher_dir/launch-hongguo"
+  install -Dm755 "$source_dir/upgrade-hongguo.sh" "$launcher_dir/upgrade-hongguo"
+  install -Dm644 "$source_dir/hongguo-upgrade.py" "$launcher_dir/hongguo-upgrade.py"
+  install -Dm644 "$source_dir/hongguo-common.sh" "$launcher_dir/hongguo-common.sh"
+  install -Dm644 "$source_dir/hongguo-web/standalone_server.py" "$launcher_dir/hongguo-web/standalone_server.py"
+  install -Dm644 "$source_dir/hongguo-web/index.html" "$launcher_dir/hongguo-web/index.html"
+  mkdir -p "$HOME/.local/bin" "$HOME/.local/share/applications"
+  ln -sf "$launcher_dir/launch-hongguo" "$HOME/.local/bin/launch-hongguo"
+  ln -sf "$launcher_dir/upgrade-hongguo" "$HOME/.local/bin/upgrade-hongguo"
+  python3 - "$source_dir/../applications/hongguo.desktop" \
+    "$HOME/.local/share/applications/hongguo.desktop" "$HOME/.local/bin/launch-hongguo" <<'PY'
+from pathlib import Path
+import sys
+
+source, destination, executable = sys.argv[1:]
+quoted = ''.join('\\' + char if char in '\\"`$' else char for char in executable)
+command = ('"' + quoted + '"').replace('\\', '\\\\')
+entry = Path(source).read_text().replace('Exec=launch-hongguo', 'Exec=' + command)
+Path(destination).write_text(entry)
+PY
+  update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+}

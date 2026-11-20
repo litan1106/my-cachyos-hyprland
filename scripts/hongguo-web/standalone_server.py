@@ -40,6 +40,8 @@ if _data:
     os.environ.setdefault("HONGGUO_STREAM_CACHE", str(Path(_data) / "stream-cache"))
 os.environ["IMPERSONATE"] = ""
 os.environ["DEVICE_POOL_SIZE"] = "0"          # Desktop never rotates device identities.
+# Unsigned catalog requests now return empty successful responses upstream.
+os.environ.setdefault("HG_SIGN_LIST", "1")
 os.environ.pop("API_KEYS", None)
 for _n in ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy",
            "all_proxy", "HONGGUO_PROXY"):

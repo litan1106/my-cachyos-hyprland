@@ -20,6 +20,7 @@ sleep 1
 rm -rf "$HG_HOME"
 # Launcher + desktop entry.
 rm -f "$HOME/.local/bin/launch-hongguo"
+rm -f "$HOME/.local/bin/upgrade-hongguo"
 rm -f "$HOME/.local/share/applications/hongguo.desktop"
 # Dedicated browser profile used by launch-hongguo's app-mode window.
 rm -rf "$HOME/.local/share/hongguo-browser"

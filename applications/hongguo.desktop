@@ -1,11 +1,14 @@
 [Desktop Entry]
 Type=Application
 Name=Hongguo
-GenericName=Media App
-Comment=红果短剧 — runs natively (no Wine), opens the UI in a native browser
+Name[zh_CN]=红果短剧
+GenericName=Short Drama Player
+Comment=Watch short dramas
+Comment[zh_CN]=观看红果短剧
 Exec=launch-hongguo
-Icon=hongguo
+Icon=video-x-generic
 Terminal=false
 Categories=AudioVideo;Video;
+Keywords=Drama;Video;红果;短剧;
 StartupNotify=true
 StartupWMClass=hongguo

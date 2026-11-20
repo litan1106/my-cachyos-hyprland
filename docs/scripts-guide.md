@@ -25,20 +25,21 @@ guides.
 14. [remove-gaming-lutris.sh](#remove-gaming-lutrissh)
 15. [install-hongguo.sh](#install-hongguosh)
 16. [launch-hongguo.sh](#launch-hongguosh)
-17. [remove-hongguo.sh](#remove-hongguosh)
-18. [install-gpu-lib32.sh](#install-gpu-lib32sh)
-19. [setup-local-bin-path.sh](#setup-local-bin-pathsh)
-20. [install-android-waydroid.sh](#install-android-waydroidsh)
-21. [finish-waydroid-init.py](#finish-waydroid-initpy)
-22. [launch-waydroid.sh](#launch-waydroidsh)
-23. [install-waydroid-apk.sh](#install-waydroid-apksh)
-24. [install-waydroid-arm.sh](#install-waydroid-armsh)
-25. [remove-android-waydroid.sh](#remove-android-waydroidsh)
-26. [fix-waydroid-firewall.sh](#fix-waydroid-firewallsh)
-27. [install-rust.sh](#install-rustsh)
-28. [install-bevy.sh](#install-bevysh)
-29. [install-golang.sh](#install-golangsh)
-30. [install-docker.sh](#install-dockersh)
+17. [upgrade-hongguo.sh](#upgrade-hongguosh)
+18. [remove-hongguo.sh](#remove-hongguosh)
+19. [install-gpu-lib32.sh](#install-gpu-lib32sh)
+20. [setup-local-bin-path.sh](#setup-local-bin-pathsh)
+21. [install-android-waydroid.sh](#install-android-waydroidsh)
+22. [finish-waydroid-init.py](#finish-waydroid-initpy)
+23. [launch-waydroid.sh](#launch-waydroidsh)
+24. [install-waydroid-apk.sh](#install-waydroid-apksh)
+25. [install-waydroid-arm.sh](#install-waydroid-armsh)
+26. [remove-android-waydroid.sh](#remove-android-waydroidsh)
+27. [fix-waydroid-firewall.sh](#fix-waydroid-firewallsh)
+28. [install-rust.sh](#install-rustsh)
+29. [install-bevy.sh](#install-bevysh)
+30. [install-golang.sh](#install-golangsh)
+31. [install-docker.sh](#install-dockersh)
 
 ---
 
@@ -466,6 +467,8 @@ launch-hdt --help          # show help
 **Usage**:
 ```bash
 ./scripts/install-hongguo.sh
+# Refresh desktop integration and launcher files for an existing installation:
+./scripts/install-hongguo.sh --launcher-only
 # Use a newer build:
 HONGGUO_INSTALLER_URL="https://.../hongguo-<ver>-windows-x86_64-setup.exe" ./scripts/install-hongguo.sh
 ```
@@ -479,8 +482,10 @@ HONGGUO_INSTALLER_URL="https://.../hongguo-<ver>-windows-x86_64-setup.exe" ./scr
 
 **Prerequisites**: `sudo` access (packages install via `pacman`); `~/.local/bin` on `$PATH` for the launcher command (set up automatically). No GPU drivers, multilib, or Wine needed — the UI runs in your existing native browser.
 
+For everyday use, open the desktop app launcher (**Super+Space** on this desktop), search for **Hongguo** or **红果短剧**, and launch it there. You can also run `launch-hongguo` from any directory. `--launcher-only` refreshes the installed scripts and desktop entry without `sudo`, downloads, or backend replacement; close Hongguo before running it.
+
 **Warnings**:
-- The download URL is **pinned to a specific version** (unlike Battle.net's stable vendor URL). Override `$HONGGUO_INSTALLER_URL` for newer builds, or edit the default in the script. To update, delete the cached `~/.cache/cachyos-windows/hongguo-*-setup.exe` and re-run.
+- The initial installer URL is **pinned to a specific version**. For an existing installation, use [upgrade-hongguo.sh](#upgrade-hongguosh) to fetch a newer release with a backup and rollback support.
 - Extraction expects a `backend/` tree inside the installer (checked for `server.py`). If a future build changes that layout, the script aborts with a hint to inspect `7z l <installer>`.
 - The launcher opens the UI with `--class=hongguo`. Test its window handling in Hyprland and configure a window rule if needed.
 - This is an unofficial, reverse-engineered FQNovel client — treat it as such. **Read the investigation deep-dive under [launch-hongguo.sh](#launch-hongguosh) to understand what's actually running.** The Android app via Waydroid ([install-android-waydroid.sh](#install-android-waydroidsh)) remains an alternative.
@@ -540,6 +545,31 @@ launch-hongguo --help           # show help
 > - All state lives under `~/.local/share/hongguo-native/`: `backend/` (extracted app), `venv/` (built from the system Python, deps installed on first run, reused after — rebuild with `launch-hongguo --reinstall-deps`), and `data/`+`hls/` (runtime cache).
 >
 > **Alternative.** 红果短剧 is a ByteDance **Android-first** app; the Android version via **Waydroid** ([install-android-waydroid.sh](#install-android-waydroidsh)) is another route with a working media stack.
+
+---
+
+## upgrade-hongguo.sh
+
+**Purpose**: Updates an existing native Hongguo installation from the [upstream releases](https://github.com/waligoraamodio288-rgb/hongguo-desktop-releases/releases). It resolves the latest release by default, or accepts a specific version or a downloaded installer. It does not require `sudo`.
+
+**Usage**:
+```bash
+./scripts/upgrade-hongguo.sh --check
+./scripts/upgrade-hongguo.sh
+./scripts/upgrade-hongguo.sh --version v1.0.46
+./scripts/upgrade-hongguo.sh --installer ~/Downloads/hongguo-1.0.46-windows-x86_64-setup.exe
+./scripts/upgrade-hongguo.sh --rollback
+```
+
+Close Hongguo before upgrading or rolling back. After installation or the first upgrade, the same command is available as `upgrade-hongguo` on `PATH`. `--check` reports the selected release without replacing files.
+
+**Migration**: Downloads are checked against the release's `SHA256SUMS.txt`. A local installer is accepted as supplied and its hash is recorded. The script extracts and validates a staged backend, removes the bundled Windows Python and JRE, and refreshes the native launcher. It preserves `data/`, `hls/`, and `venv/`, plus existing backend `downloads/`, `config.json`, `devices.json`, and `.env` state.
+
+The previous backend and launcher are retained under `~/.local/share/hongguo-native/backups/`; release information is recorded in `native-release.json`. A failed installation restores the previous files. `--rollback` restores the latest complete backup while retaining current runtime data. Backups remain until explicitly removed or Hongguo is uninstalled, so allow disk space for both versions.
+
+**Prerequisites**: An existing native installation, Python 3, and `7z`; network access is needed unless using `--installer` or `--rollback`. The launcher and upgrader share a lock so an upgrade cannot replace a running backend.
+
+This migrates the packaged backend while retaining the native browser launcher. A successful upgrade does not establish that upstream search, signing, or video APIs work; test episode playback after upgrading. The player displays stream failures instead of leaving an unexplained blank video.
 
 ---
 

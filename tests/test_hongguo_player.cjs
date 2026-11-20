@@ -30,7 +30,7 @@ class Element extends EventTarget {
   play() { this.playCount++; return Promise.resolve(); }
 }
 
-function player(episodes) {
+function player(episodes, streamFetch = async () => ({ ok: true })) {
   const elements = new Map();
   const document = new Element();
   document.querySelector = selector => {
@@ -40,7 +40,7 @@ function player(episodes) {
   document.createElement = () => new Element();
   const context = vm.createContext({
     document, URL, location: { origin: 'http://127.0.0.1:8793' },
-    fetch: async url => ({
+    fetch: async (url, options) => new URL(url).pathname === '/stream' ? streamFetch(url, options) : ({
       ok: true,
       json: async () => ({ items: new URL(url).pathname === '/episodes' ? episodes : [] }),
     }),
@@ -53,6 +53,8 @@ function player(episodes) {
     open: sid => vm.runInContext('openSeries', context)(sid, 'Test series'),
     close: () => vm.runInContext('closePlayer()', context),
     end: () => video.dispatchEvent(new Event('ended')),
+    error: () => video.dispatchEvent(new Event('error')),
+    status: () => document.querySelector('#playerStatus').textContent,
     episode: () => new URL(video.src).searchParams.get('ep'),
   };
 }
@@ -110,4 +112,64 @@ test('an empty episode list does not start playback', async () => {
   p.end();
   assert.equal(p.video.src, '');
   assert.equal(p.video.playCount, 0);
+});
+
+const flush = () => new Promise(resolve => setImmediate(resolve));
+
+test('media errors show the stream API detail', async () => {
+  let request;
+  const p = player([{ index: 1 }], async (url, options) => {
+    request = { url, options };
+    return { ok: false, json: async () => ({ detail: 'stream失败: Upstream did not return JSON' }) };
+  });
+  await p.open('series-a');
+  p.error();
+  await flush();
+  assert.match(p.status(), /stream失败: Upstream did not return JSON/);
+  assert.equal(request.url, p.video.src);
+  assert.equal(request.options.headers.Range, 'bytes=0-0');
+});
+
+test('successful probe cancels its body and shows a generic playback error', async () => {
+  let cancelled = false;
+  const p = player([{ index: 1 }], async () => ({ ok: true, body: { cancel: () => { cancelled = true; } } }));
+  await p.open('series-a');
+  p.error();
+  await flush();
+  assert.equal(cancelled, true);
+  assert.match(p.status(), /播放失败/);
+});
+
+test('stale stream failures cannot replace status after switching or closing', async () => {
+  let resolve;
+  const p = player([{ index: 1 }, { index: 2 }], () => new Promise(r => { resolve = r; }));
+  await p.open('series-a');
+  p.error();
+  p.elements.get('#epbar').children[1].onclick();
+  resolve({ ok: false, json: async () => ({ detail: '旧错误' }) });
+  await flush();
+  assert.doesNotMatch(p.status(), /旧错误/);
+  p.error();
+  p.close();
+  resolve({ ok: false, json: async () => ({ detail: '关闭后错误' }) });
+  await flush();
+  assert.equal(p.status(), '');
+});
+
+test('loading clears on playing and autoplay denial asks for a click', async () => {
+  const p = player([{ index: 1 }]);
+  p.video.play = () => Promise.reject({ name: 'NotAllowedError' });
+  await p.open('series-a');
+  await flush();
+  assert.match(p.status(), /点击播放/);
+  p.video.dispatchEvent(new Event('playing'));
+  assert.equal(p.status(), '');
+});
+
+test('aborted play during switching does not show an error', async () => {
+  const p = player([{ index: 1 }]);
+  p.video.play = () => Promise.reject({ name: 'AbortError' });
+  await p.open('series-a');
+  await flush();
+  assert.match(p.status(), /加载中/);
 });
